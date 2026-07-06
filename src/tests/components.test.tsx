@@ -136,13 +136,13 @@ describe('Theme Context and Toggling', () => {
       </ThemeProvider>
     );
 
-    // Initial state: Light/Dark/Chai buttons exist
+    // Initial state: Light/Dark/System buttons exist
     const lightBtn = screen.getByRole('button', { name: /Light/i });
     const darkBtn = screen.getByRole('button', { name: /Dark/i });
-    const chaiBtn = screen.getByRole('button', { name: /Chai/i });
+    const systemBtn = screen.getByRole('button', { name: /System/i });
     expect(lightBtn).toBeInTheDocument();
     expect(darkBtn).toBeInTheDocument();
-    expect(chaiBtn).toBeInTheDocument();
+    expect(systemBtn).toBeInTheDocument();
 
     // Toggle Light
     fireEvent.click(lightBtn);
@@ -152,9 +152,9 @@ describe('Theme Context and Toggling', () => {
     fireEvent.click(darkBtn);
     expect(document.documentElement.classList.contains('dark')).toBe(true);
 
-    // Toggle Chai
-    fireEvent.click(chaiBtn);
-    expect(document.documentElement.classList.contains('chai')).toBe(true);
+    // Toggle System
+    fireEvent.click(systemBtn);
+    expect(document.documentElement.classList.contains('system')).toBe(true);
   });
 });
 

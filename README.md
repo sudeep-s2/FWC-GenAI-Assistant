@@ -33,7 +33,7 @@ StadiumOS AI implements a fully responsive dark-mode cockpit for venue managers,
 
 StadiumOS AI features:
 * **First-Visit Onboarding Guide**: Explains the command center tabs and domain features in 30 seconds. Saves state in `localStorage`.
-* **Light / Dark / Chai Tech Theme Support**: Toggles between dark glassmorphism, a clean high-contrast light mode, and a warm cozy tech milk tea / espresso styling.
+* **Light / Dark / System Tech Theme Support**: Toggles between dark glassmorphism, a clean high-contrast light mode, and a warm cozy tech milk tea / espresso styling.
 * **InfoTooltips**: Quick guidance icons attached to key dashboards explaining metrics.
 * **Interactive Empty States**: Empty logs show clean placeholder cards with quick reset options.
 * **"Start Demo" Trigger**: Initiates pre-configured stadium scenarios and launches the AI flow with one click.

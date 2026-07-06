@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
-export type ThemeType = 'light' | 'dark' | 'chai';
+export type ThemeType = 'light' | 'dark' | 'system';
 
 interface ThemeContextType {
   theme: ThemeType;
@@ -27,12 +27,12 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     const root = window.document.documentElement;
 
     const updateTheme = () => {
-      // both dark and chai count as dark-themed components (light elements are false)
-      const activeDark = theme === 'dark' || theme === 'chai';
+      // both dark and system (our tech vibe) count as dark-themed components (light elements are false)
+      const activeDark = theme === 'dark' || theme === 'system';
       setIsDark(activeDark);
 
       // Clean all classes first
-      root.classList.remove('light', 'dark', 'chai');
+      root.classList.remove('light', 'dark', 'system');
 
       if (theme === 'dark') {
         root.classList.add('dark');
@@ -40,8 +40,8 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       } else if (theme === 'light') {
         root.classList.add('light');
         root.style.colorScheme = 'light';
-      } else if (theme === 'chai') {
-        root.classList.add('chai');
+      } else if (theme === 'system') {
+        root.classList.add('system');
         root.style.colorScheme = 'dark';
       }
     };

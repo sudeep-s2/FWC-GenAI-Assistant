@@ -102,7 +102,7 @@ html.light {
   --slate-950: #ffffff;
 }
 
-html.chai {
+html.system {
   --stadium-bg: #150f0a; /* Dark warm cozy chai espresso */
   --stadium-text: #f5ebe0; /* Creamy warm text */
   --stadium-card-bg: rgba(38, 28, 20, 0.4);
