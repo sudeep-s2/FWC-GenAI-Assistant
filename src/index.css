@@ -102,6 +102,35 @@ html.light {
   --slate-950: #ffffff;
 }
 
+html.chai {
+  --stadium-bg: #150f0a; /* Dark warm cozy chai espresso */
+  --stadium-text: #f5ebe0; /* Creamy warm text */
+  --stadium-card-bg: rgba(38, 28, 20, 0.4);
+  --stadium-card-border: rgba(217, 119, 6, 0.25);
+  --stadium-card-glow: rgba(217, 119, 6, 0.08);
+  --stadium-muted: #b59c85;
+
+  --stadium-950: #120c08;
+  --stadium-900: #1a120c;
+  --stadium-800: #251a11;
+  --stadium-700: #332418;
+  --stadium-600: #423020;
+  --stadium-500: #543d29;
+  --stadium-400: #684e36;
+
+  --slate-50: #fdfbf7;
+  --slate-100: #f7f4eb;
+  --slate-200: #eedec5;
+  --slate-300: #ddc6a7;
+  --slate-400: #bda280;
+  --slate-500: #9c7f5c;
+  --slate-600: #7d6244;
+  --slate-700: #5f4a33;
+  --slate-800: #423222;
+  --slate-900: #271d14;
+  --slate-950: #140e0a;
+}
+
 *, *::before, *::after {
   box-sizing: border-box;
 }

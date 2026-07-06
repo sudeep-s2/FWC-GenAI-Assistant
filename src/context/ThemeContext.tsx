@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
-export type ThemeType = 'light' | 'dark' | 'system';
+export type ThemeType = 'light' | 'dark' | 'chai';
 
 interface ThemeContextType {
   theme: ThemeType;
@@ -13,10 +13,10 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [theme, setThemeState] = useState<ThemeType>(() => {
     const saved = localStorage.getItem('stadiumos-theme');
-    return (saved as ThemeType) || 'system';
+    return (saved as ThemeType) || 'dark'; // default to dark
   });
 
-  const [isDark, setIsDark] = useState(false);
+  const [isDark, setIsDark] = useState(true);
 
   const setTheme = (newTheme: ThemeType) => {
     setThemeState(newTheme);
@@ -25,40 +25,28 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   useEffect(() => {
     const root = window.document.documentElement;
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
 
     const updateTheme = () => {
-      let activeDark = false;
-      if (theme === 'system') {
-        activeDark = mediaQuery.matches;
-      } else {
-        activeDark = theme === 'dark';
-      }
-
+      // both dark and chai count as dark-themed components (light elements are false)
+      const activeDark = theme === 'dark' || theme === 'chai';
       setIsDark(activeDark);
 
-      if (activeDark) {
+      // Clean all classes first
+      root.classList.remove('light', 'dark', 'chai');
+
+      if (theme === 'dark') {
         root.classList.add('dark');
-        root.classList.remove('light');
         root.style.colorScheme = 'dark';
-      } else {
+      } else if (theme === 'light') {
         root.classList.add('light');
-        root.classList.remove('dark');
         root.style.colorScheme = 'light';
+      } else if (theme === 'chai') {
+        root.classList.add('chai');
+        root.style.colorScheme = 'dark';
       }
     };
 
     updateTheme();
-
-    // Listen for system changes if system theme active
-    const listener = () => {
-      if (theme === 'system') {
-        updateTheme();
-      }
-    };
-
-    mediaQuery.addEventListener('change', listener);
-    return () => mediaQuery.removeEventListener('change', listener);
   }, [theme]);
 
   return (

@@ -23,8 +23,8 @@ STADIUMOS AI FEATURES
 - [x] AIResponseCard citation display & action step list
 - [x] AIStatusPanel live session telemetry & rate limit progress bar
 - [x] OnboardingGuide welcome system (multi-step first-visit tour)
-- [x] ThemeContext supporting Light, Dark, and System modes
-- [x] ThemeToggle widget (Light / Dark / System settings)
+- [x] ThemeContext supporting Light, Dark, and Chai Tech modes
+- [x] ThemeToggle widget (Light / Dark / Chai settings)
 - [x] InfoTooltip accessibility help buttons on key cards and dashboards
 - [x] Empty state placeholders ("No stadium incidents detected 🎉" with reset buttons)
 - [x] AILoadingState loading pipeline layout representation
