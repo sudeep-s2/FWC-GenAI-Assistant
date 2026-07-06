@@ -1,13 +1,26 @@
 @import "tailwindcss";
 
 @theme {
-  --color-stadium-950: #020810;
-  --color-stadium-900: #050b1a;
-  --color-stadium-800: #0a1628;
-  --color-stadium-700: #0f1e38;
-  --color-stadium-600: #162948;
-  --color-stadium-500: #1e3a5f;
-  --color-stadium-400: #2a5080;
+  --color-stadium-950: var(--stadium-950);
+  --color-stadium-900: var(--stadium-900);
+  --color-stadium-800: var(--stadium-800);
+  --color-stadium-700: var(--stadium-700);
+  --color-stadium-600: var(--stadium-600);
+  --color-stadium-500: var(--stadium-500);
+  --color-stadium-400: var(--stadium-400);
+
+  --color-slate-50: var(--slate-50);
+  --color-slate-100: var(--slate-100);
+  --color-slate-200: var(--slate-200);
+  --color-slate-300: var(--slate-300);
+  --color-slate-400: var(--slate-400);
+  --color-slate-500: var(--slate-500);
+  --color-slate-600: var(--slate-600);
+  --color-slate-700: var(--slate-700);
+  --color-slate-800: var(--slate-800);
+  --color-slate-900: var(--slate-900);
+  --color-slate-950: var(--slate-950);
+
   --color-gold-600: #c49b0e;
   --color-gold-500: #f5c518;
   --color-gold-400: #f7d040;
@@ -28,7 +41,9 @@
   --color-warn-400: #fb923c;
   --font-family-sans: 'Inter', 'Segoe UI', system-ui, sans-serif;
   --font-family-display: 'Outfit', 'Inter', system-ui, sans-serif;
-  
+}
+
+:root {
   /* Defaults to Dark Theme variables */
   --stadium-bg: #050b1a;
   --stadium-text: #e2e8f0;
@@ -36,6 +51,26 @@
   --stadium-card-border: rgba(255, 255, 255, 0.07);
   --stadium-muted: #64748b;
   --stadium-card-glow: rgba(255, 255, 255, 0.02);
+
+  --stadium-950: #020810;
+  --stadium-900: #050b1a;
+  --stadium-800: #0a1628;
+  --stadium-700: #0f1e38;
+  --stadium-600: #162948;
+  --stadium-500: #1e3a5f;
+  --stadium-400: #2a5080;
+
+  --slate-50: #f8fafc;
+  --slate-100: #f1f5f9;
+  --slate-200: #e2e8f0;
+  --slate-300: #cbd5e1;
+  --slate-400: #94a3b8;
+  --slate-500: #64748b;
+  --slate-600: #475569;
+  --slate-700: #334155;
+  --slate-800: #1e293b;
+  --slate-900: #0f172a;
+  --slate-950: #020817;
 }
 
 html.light {
@@ -45,6 +80,26 @@ html.light {
   --stadium-card-border: rgba(15, 23, 42, 0.09);
   --stadium-muted: #64748b;
   --stadium-card-glow: rgba(0, 0, 0, 0.01);
+
+  --stadium-950: #f8fafc;
+  --stadium-900: #f1f5f9;
+  --stadium-800: #e2e8f0;
+  --stadium-700: #cbd5e1;
+  --stadium-600: #94a3b8;
+  --stadium-500: #64748b;
+  --stadium-400: #475569;
+
+  --slate-50: #0f172a;
+  --slate-100: #1e293b;
+  --slate-200: #334155;
+  --slate-300: #475569;
+  --slate-400: #64748b;
+  --slate-500: #94a3b8;
+  --slate-600: #cbd5e1;
+  --slate-700: #e2e8f0;
+  --slate-800: #f1f5f9;
+  --slate-900: #f8fafc;
+  --slate-950: #ffffff;
 }
 
 *, *::before, *::after {
