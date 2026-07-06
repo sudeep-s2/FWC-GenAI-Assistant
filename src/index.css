@@ -28,6 +28,23 @@
   --color-warn-400: #fb923c;
   --font-family-sans: 'Inter', 'Segoe UI', system-ui, sans-serif;
   --font-family-display: 'Outfit', 'Inter', system-ui, sans-serif;
+  
+  /* Defaults to Dark Theme variables */
+  --stadium-bg: #050b1a;
+  --stadium-text: #e2e8f0;
+  --stadium-card-bg: rgba(255, 255, 255, 0.03);
+  --stadium-card-border: rgba(255, 255, 255, 0.07);
+  --stadium-muted: #64748b;
+  --stadium-card-glow: rgba(255, 255, 255, 0.02);
+}
+
+html.light {
+  --stadium-bg: #f8fafc;
+  --stadium-text: #0f172a;
+  --stadium-card-bg: rgba(15, 23, 42, 0.03);
+  --stadium-card-border: rgba(15, 23, 42, 0.09);
+  --stadium-muted: #64748b;
+  --stadium-card-glow: rgba(0, 0, 0, 0.01);
 }
 
 *, *::before, *::after {
@@ -42,10 +59,11 @@ html, body, #root {
 
 body {
   font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
-  background-color: #050b1a;
-  color: #e2e8f0;
+  background-color: var(--stadium-bg);
+  color: var(--stadium-text);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.25s ease, color 0.25s ease;
 }
 
 #root {
@@ -60,7 +78,7 @@ body {
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #0a1628;
+  background: var(--stadium-bg);
 }
 ::-webkit-scrollbar-thumb {
   background: #1e3a5f;
@@ -72,10 +90,11 @@ body {
 
 /* Glass card effect */
 .glass-card {
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--stadium-card-bg);
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.07);
+  border: 1px solid var(--stadium-card-border);
   border-radius: 12px;
+  transition: background-color 0.25s ease, border-color 0.25s ease;
 }
 
 /* Glow effects */

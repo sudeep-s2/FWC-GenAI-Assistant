@@ -26,8 +26,17 @@ StadiumOS AI implements a fully responsive dark-mode cockpit for venue managers,
 1. Set up your `.env` file with `VITE_GEMINI_API_KEY`.
 2. Run `npm install` to install dependencies.
 3. Run `npm run dev` to start the local development server.
-4. Run `npm test` to run all 27 unit and integration tests.
+4. Run `npm test` to run all 30 unit and integration tests.
 5. Run `npm run build` to build the production-ready optimized build assets.
+
+## User Experience & Onboarding
+
+StadiumOS AI features:
+* **First-Visit Onboarding Guide**: Explains the command center tabs and domain features in 30 seconds. Saves state in `localStorage`.
+* **Light / Dark Theme Support**: Toggles between dark glassmorphism and a clean high-contrast light mode.
+* **InfoTooltips**: Quick guidance icons attached to key dashboards explaining metrics.
+* **Interactive Empty States**: Empty logs show clean placeholder cards with quick reset options.
+* **"Start Demo" Trigger**: Initiates pre-configured stadium scenarios and launches the AI flow with one click.
 
 ## Production Deployment
 

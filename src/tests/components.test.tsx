@@ -5,6 +5,10 @@ import AIResponseCard from '../components/shared/AIResponseCard';
 import AIStatusPanel from '../components/shared/AIStatusPanel';
 import CommandCenter from '../components/dashboard/CommandCenter';
 import App from '../App';
+import { ThemeProvider } from '../context/ThemeContext';
+import ThemeToggle from '../components/shared/ThemeToggle';
+import OnboardingGuide from '../components/shared/OnboardingGuide';
+import InfoTooltip from '../components/shared/InfoTooltip';
 
 // Mock Recharts to avoid jsdom layout dimensions warnings
 vi.mock('recharts', async (importOriginal) => {
@@ -64,7 +68,11 @@ describe('AIStatusPanel Component', () => {
 
 describe('CommandCenter Dashboard Component', () => {
   it('should render CommandCenter tabs, titles, and KPIs', () => {
-    render(<CommandCenter />);
+    render(
+      <ThemeProvider>
+        <CommandCenter />
+      </ThemeProvider>
+    );
     
     expect(screen.getByText('Mission Control — Command Center')).toBeInTheDocument();
     expect(screen.getByText('Crowd Level')).toBeInTheDocument();
@@ -82,14 +90,18 @@ describe('CommandCenter Dashboard Component', () => {
     });
     globalThis.fetch = mockFetch;
 
-    render(<CommandCenter />);
+    render(
+      <ThemeProvider>
+        <CommandCenter />
+      </ThemeProvider>
+    );
     
     const surgeBtn = screen.getByRole('button', { name: /Run demo scenario: Crowd Surge Emergency at Gate G/i });
     expect(surgeBtn).toBeInTheDocument();
     
     fireEvent.click(surgeBtn);
     
-    expect(screen.getByText(/Processing through AI pipeline/i)).toBeInTheDocument();
+    expect(screen.getByText(/Processing scenario through GenAI twin/i)).toBeInTheDocument();
     
     await waitFor(() => {
       expect(screen.getByText(/Immediate crowd buffering protocol/i)).toBeInTheDocument();
@@ -99,7 +111,11 @@ describe('CommandCenter Dashboard Component', () => {
 
 describe('App Main Entry Navigation', () => {
   it('should render and allow switching dashboard tabs', async () => {
-    render(<App />);
+    render(
+      <ThemeProvider>
+        <App />
+      </ThemeProvider>
+    );
     
     expect(screen.getByText('StadiumOS AI')).toBeInTheDocument();
     
@@ -109,5 +125,60 @@ describe('App Main Entry Navigation', () => {
     await waitFor(() => {
       expect(screen.getByText('FanJourney AI — Personalized Matchday Planner')).toBeInTheDocument();
     });
+  });
+});
+
+describe('Theme Context and Toggling', () => {
+  it('should render theme toggler and toggle active classes', () => {
+    render(
+      <ThemeProvider>
+        <ThemeToggle />
+      </ThemeProvider>
+    );
+
+    // Initial state: Light/Dark buttons exist
+    const lightBtn = screen.getByRole('button', { name: /Light/i });
+    const darkBtn = screen.getByRole('button', { name: /Dark/i });
+    expect(lightBtn).toBeInTheDocument();
+    expect(darkBtn).toBeInTheDocument();
+
+    // Toggle Light
+    fireEvent.click(lightBtn);
+    expect(document.documentElement.classList.contains('light')).toBe(true);
+
+    // Toggle Dark
+    fireEvent.click(darkBtn);
+    expect(document.documentElement.classList.contains('dark')).toBe(true);
+  });
+});
+
+describe('Onboarding Guide Modal', () => {
+  it('should show onboarding and dismiss on finish/skip click', () => {
+    localStorage.removeItem('stadiumos-onboarded');
+    render(<OnboardingGuide />);
+    
+    // Check first step welcome title
+    expect(screen.getByText('Welcome to StadiumOS AI')).toBeInTheDocument();
+    
+    // Click Skip Guide button
+    const skipBtn = screen.getByRole('button', { name: /Skip Guide/i });
+    fireEvent.click(skipBtn);
+    
+    // Onboarding guide should set complete in localStorage
+    expect(localStorage.getItem('stadiumos-onboarded')).toBe('true');
+  });
+});
+
+describe('InfoTooltip Component', () => {
+  it('should display tooltip content on button focus/hover', async () => {
+    render(<InfoTooltip content="Test help content" label="Incidents Info" />);
+    
+    const trigger = screen.getByRole('button', { name: /Incidents Info/i });
+    expect(trigger).toBeInTheDocument();
+    
+    // Hover/Focus triggers state update
+    fireEvent.focus(trigger);
+    
+    expect(screen.getByText('Test help content')).toBeInTheDocument();
   });
 });

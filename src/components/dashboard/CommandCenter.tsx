@@ -5,9 +5,11 @@ import {
 } from 'recharts';
 import { Shield, Users, AlertTriangle, Zap, TrendingUp, Bus, Leaf, Play } from 'lucide-react';
 import { demoScenarios } from '../../utils/scenarios';
+import IncidentLog from './IncidentLog';
+import InfoTooltip from '../shared/InfoTooltip';
+import AILoadingState from '../shared/AILoadingState';
 import AIResponseCard from '../shared/AIResponseCard';
 import AIStatusPanel from '../shared/AIStatusPanel';
-import IncidentLog from './IncidentLog';
 import { useAI } from '../../hooks/useAI';
 
 const crowdData = [
@@ -62,11 +64,25 @@ const CommandCenter: React.FC = () => {
       <div className="glass-card p-5 border border-gold-500/20 glow-gold">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold font-display text-gradient-gold mb-1">
-              Mission Control — Command Center
-            </h1>
+            <div className="flex items-center gap-2">
+              <h1 className="text-2xl font-bold font-display text-gradient-gold mb-1">
+                Mission Control — Command Center
+              </h1>
+              <InfoTooltip content="Real-time stadium operating hub mapping crowd statistics, active volunteer allocations, and emergency triggers." />
+            </div>
             <p className="text-slate-400 text-sm">FIFA World Cup 2026 · Real-time GenAI Operations Twin</p>
           </div>
+          
+          {/* Start Demo Button */}
+          <button
+            onClick={() => handleDemo(demoScenarios[0])}
+            disabled={loading}
+            className="px-4 py-2 bg-gradient-to-r from-gold-500 to-amber-500 hover:from-gold-400 hover:to-amber-400 text-stadium-950 font-bold text-sm rounded-xl cursor-pointer shadow-md hover:shadow-gold-500/20 transition-all disabled:opacity-50"
+            aria-label="Start Quick Demo Tour"
+          >
+            🚀 Start Demo
+          </button>
+
           <div className="flex items-center gap-6 text-sm">
             <div className="text-center">
               <p className="text-xs text-slate-500 uppercase tracking-widest">Attendance</p>
@@ -199,20 +215,7 @@ const CommandCenter: React.FC = () => {
 
         {/* Loading state */}
         {loading && (
-          <div className="glass-card p-4 border border-ai-500/20">
-            <div className="flex items-center gap-3">
-              <div className="w-4 h-4 border-2 border-ai-500 border-t-transparent rounded-full animate-spin" aria-hidden="true" />
-              <span className="text-sm text-ai-400 font-medium">Processing through AI pipeline…</span>
-            </div>
-            <div className="mt-3 space-y-2">
-              {['Sanitizing input', 'Detecting intent', 'RAG context retrieval', 'Querying Gemini AI'].map((step, i) => (
-                <div key={i} className="flex items-center gap-2 text-xs text-slate-500">
-                  <div className="w-1 h-1 rounded-full bg-ai-500 live-dot" style={{ animationDelay: `${i * 0.3}s` }} aria-hidden="true" />
-                  {step}
-                </div>
-              ))}
-            </div>
-          </div>
+          <AILoadingState message="Processing scenario through GenAI twin..." />
         )}
 
         {/* Response */}

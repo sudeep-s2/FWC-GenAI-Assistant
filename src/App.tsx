@@ -2,6 +2,8 @@ import { useState, useEffect, Suspense, lazy } from 'react';
 import { LayoutDashboard, Users, Compass, ShieldAlert, Accessibility, Leaf, Sparkles } from 'lucide-react';
 import CommandCenter from './components/dashboard/CommandCenter';
 import { orchestrator } from './hooks/useAI';
+import ThemeToggle from './components/shared/ThemeToggle';
+import OnboardingGuide from './components/shared/OnboardingGuide';
 
 // Lazy load other panels for better performance and lazy suspense testing
 const CrowdPulse = lazy(() => import('./components/crowd/CrowdPulse'));
@@ -50,23 +52,26 @@ function App() {
               <span className="text-xs font-medium text-slate-500 block">FIFA World Cup 2026 Operations Twin</span>
             </div>
           </div>
-          <nav className="hidden md:flex items-center gap-1">
-            {navigation.map((item) => (
-              <button
-                key={item.id}
-                onClick={() => setActiveTab(item.id)}
-                aria-current={activeTab === item.id ? 'page' : undefined}
-                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200 cursor-pointer ${
-                  activeTab === item.id
-                    ? 'bg-gold-500 text-stadium-950 shadow-md font-bold'
-                    : 'text-slate-400 hover:text-slate-200 hover:bg-stadium-800/40'
-                }`}
-              >
-                {item.icon}
-                <span>{item.name}</span>
-              </button>
-            ))}
-          </nav>
+          <div className="flex items-center gap-4">
+            <nav className="hidden md:flex items-center gap-1">
+              {navigation.map((item) => (
+                <button
+                  key={item.id}
+                  onClick={() => setActiveTab(item.id)}
+                  aria-current={activeTab === item.id ? 'page' : undefined}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200 cursor-pointer ${
+                    activeTab === item.id
+                      ? 'bg-gold-500 text-stadium-950 shadow-md font-bold'
+                      : 'text-slate-400 hover:text-slate-200 hover:bg-stadium-800/40'
+                  }`}
+                >
+                  {item.icon}
+                  <span>{item.name}</span>
+                </button>
+              ))}
+            </nav>
+            <ThemeToggle />
+          </div>
         </div>
       </header>
 
@@ -107,10 +112,8 @@ function App() {
         </Suspense>
       </main>
 
-      {/* Footer */}
-      <footer className="bg-stadium-950 border-t border-stadium-900 py-6 text-center text-xs text-slate-600">
-        <p>© 2026 FIFA World Cup Operations Twin · StadiumOS AI · Grounded in Real-Time Twin Telemetry</p>
-      </footer>
+      {/* Onboarding Guide Dialog */}
+      <OnboardingGuide />
     </div>
   );
 }
