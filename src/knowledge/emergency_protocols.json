@@ -1,0 +1,42 @@
+[
+  {
+    "id": "em-medical",
+    "title": "Medical Assistance Flow and EMS Coordination",
+    "category": "Emergency Protocols",
+    "section": "EM-01",
+    "content": "For medical emergencies, volunteers should immediately notify Sector Command on Radio Channel 3. State the precise section, row, and seat number. Keep the patient comfortable and clear surrounding space. Do not attempt to move the patient unless there is immediate danger (e.g., fire). First Aid Stations are located in Sector A (Level 1, Room 14), Sector B (Level 2, Room 32), and Sector D (Level 1, Room 8).",
+    "priority": "critical",
+    "tags": ["medical", "first-aid", "ems", "dispatch"],
+    "lastUpdated": "2026-07-06"
+  },
+  {
+    "id": "em-blocked-exit",
+    "title": "Blocked Exit and Fire Hazard Redirection Flow",
+    "category": "Emergency Protocols",
+    "section": "EM-02",
+    "content": "If an exit route or corridor becomes blocked by debris, fire, structural failure, or overcrowding, ushers must immediately cross their arms to signal a detour and redirect the crowd to the nearest alternative exit. Report the blockage details (including obstruction type) to Sector Command via Channel 1 so that facilities crew can clear the route.",
+    "priority": "critical",
+    "tags": ["blocked-exit", "detour", "fire", "facilities"],
+    "lastUpdated": "2026-07-06"
+  },
+  {
+    "id": "em-weather",
+    "title": "Severe Weather Disruption and Hydration Protocols",
+    "category": "Emergency Protocols",
+    "section": "EM-03",
+    "content": "1. Lightning: If lightning strikes within 8 kilometers of the stadium, operations must suspend match play and direct fans to covered concourses. 2. Extreme Heat: If temperatures exceed 35C, implement the Hydration Plan: distribute free water bottles at all gates, permit spectators to bring unsealed clear plastic water bottles up to 1 liter, and run cooling mist fans in plaza zones.",
+    "priority": "high",
+    "tags": ["weather", "lightning", "extreme-heat", "hydration", "water"],
+    "lastUpdated": "2026-07-06"
+  },
+  {
+    "id": "em-surge-escalation",
+    "title": "Crowd Safety Escalation and Containment Guidelines",
+    "category": "Emergency Protocols",
+    "section": "EM-04",
+    "content": "When crowd density reaches Critical level (more than 5 people per square meter), there is risk of progressive crowd collapse. Turnstiles must be locked immediately to halt incoming flow. Sector Supervisors must instruct volunteers to open all barrier relief gates to discharge crowd pressure. If aggressive behavior or panic occurs, hand over control of the sector checkpoints to local police commanders immediately.",
+    "priority": "critical",
+    "tags": ["crowd-collapse", "containment", "police", "lockdown", "relieve"],
+    "lastUpdated": "2026-07-06"
+  }
+]

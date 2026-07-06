@@ -1,0 +1,62 @@
+[
+  {
+    "id": "sop-crowd-surge",
+    "title": "Crowd Congestion and Buffering Procedures",
+    "category": "Crowd Management",
+    "section": "SOP-01",
+    "content": "In the event of crowd density exceeding 4 people per square meter near gates (particularly Gate G and Gate H), operators must initiate buffering. Direct volunteer staff to deploy serpentine barriers 50 meters from the gate. Restrict ticket scanners to half capacity to slow entry rate. Coordinate with security to redirect incoming spectators to auxiliary gates (Gate F and Gate I). Announce detour routes on stadium PA and display on LED screens.",
+    "priority": "high",
+    "tags": ["crowd", "surge", "gate-g", "buffering", "safety"],
+    "lastUpdated": "2026-07-06"
+  },
+  {
+    "id": "sop-gate-mgmt",
+    "title": "Standard Gate Entry and Ticket Validation Configuration",
+    "category": "Gate Management",
+    "section": "SOP-02",
+    "content": "All gates must open exactly 3 hours prior to kickoff. Ticket validation lanes must have 1 volunteer per electronic scanner. If any electronic scanner fails, the volunteer must immediately report to the Sector Supervisor and shift to manual barcode scanning using the backup handheld devices. Standard gate flow capacity should target 1,200 spectators per lane per hour.",
+    "priority": "medium",
+    "tags": ["gate", "ticketing", "flow", "volunteers"],
+    "lastUpdated": "2026-07-06"
+  },
+  {
+    "id": "sop-evac-basic",
+    "title": "Emergency Evacuation Pathway and Muster Points",
+    "category": "Safety & Evacuation",
+    "section": "SOP-03",
+    "content": "When a level 3 evacuation alarm is triggered, all gate turnstiles must be set to 'free-wheel' mode automatically. Ushers must immediately open the emergency double-doors. Spectators in Sectors A and B must be routed to Muster Point North (Zone 1). Spectators in Sectors C and D must be routed to Muster Point South (Zone 2). Elevators must be reserved exclusively for wheelchair users and mobility-impaired individuals.",
+    "priority": "critical",
+    "tags": ["evacuation", "emergency", "muster-point", "safety"],
+    "lastUpdated": "2026-07-06"
+  },
+  {
+    "id": "sop-queue-handling",
+    "title": "Queue Management and Overflow Checkpoints",
+    "category": "Crowd Management",
+    "section": "SOP-04",
+    "content": "For match days with high attendance (over 60,000 capacity), queue overflow checkpoints must be established at the primary transit exit zones. When transit shuttles unload, volunteers should form a human chain using flags to pulse the crowd in waves of 200, preventing a single continuous wave from overwhelming the outer security perimeter checks.",
+    "priority": "medium",
+    "tags": ["queue", "transit", "crowd", "checkpoint"],
+    "lastUpdated": "2026-07-06"
+  },
+  {
+    "id": "sop-security-coord",
+    "title": "Security Escalation and Emergency Liaison Protocol",
+    "category": "Security",
+    "section": "SOP-05",
+    "content": "For physical altercations, suspected contraband, or persistent perimeter breaches, volunteers must not intervene directly. They must immediately alert the nearest Security Sector Captain via radio Channel 4, stating the location grid, description of individuals involved, and estimated crowd involvement level.",
+    "priority": "high",
+    "tags": ["security", "escalation", "contraband", "radio"],
+    "lastUpdated": "2026-07-06"
+  },
+  {
+    "id": "sop-fan-assistance",
+    "title": "Ticketing Resolution Desk and Lost Item Operations",
+    "category": "Fan Assistance",
+    "section": "SOP-06",
+    "content": "Ticketing resolution desks are located at North Plaza (Desk 1) and South Plaza (Desk 2). Fans experiencing digital ticket loading failures should be directed to these desks. Lost items should be logged into the central database and deposited at the Guest Services Suite in Sector C.",
+    "priority": "low",
+    "tags": ["fan-support", "ticketing", "lost-found", "desks"],
+    "lastUpdated": "2026-07-06"
+  }
+]

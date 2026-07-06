@@ -1,0 +1,52 @@
+[
+  {
+    "id": "acc-wheelchair",
+    "title": "Wheelchair Routing and Accessible ADA Elevators",
+    "category": "Accessibility",
+    "section": "ACC-01",
+    "content": "Wheelchair users entering via the Main Plaza should be routed through ADA Ramp 1 (slope ratio 1:12) to the lower concourse. ADA Elevators 3 and 4 (located in Sector B and C respectively) provide access to the upper tier seating. Volunteers should accompany wheelchair users to ensure elevator access priority and assist with doors if needed.",
+    "priority": "high",
+    "tags": ["wheelchair", "ada", "elevator", "ramp"],
+    "lastUpdated": "2026-07-06"
+  },
+  {
+    "id": "acc-seating",
+    "title": "Accessible Seating Allocation and Distribution",
+    "category": "Accessibility",
+    "section": "ACC-02",
+    "content": "Accessible seating platforms are located at the rear of Sections 102, 114, 204, and 228. Each platform features safety railings, dedicated power outlets for motorized wheelchairs, and companion seating. Companion tickets are limited to 1 per ADA visitor. Platforms must remain clear of all standing spectators and temporary equipment.",
+    "priority": "medium",
+    "tags": ["seating", "ada", "companion", "sections"],
+    "lastUpdated": "2026-07-06"
+  },
+  {
+    "id": "acc-elderly",
+    "title": "Elderly Visitor Support and Golf Cart Shuttle Operations",
+    "category": "Accessibility",
+    "section": "ACC-03",
+    "content": "For elderly visitors or those with limited mobility who do not have a wheelchair, golf cart shuttle services operate continuously between parking Lot P4, the Light Rail Station, and Gate A. Shuttle drivers must check in at Sector North Desk. Speed is capped at 10 km/h in pedestrian zones.",
+    "priority": "medium",
+    "tags": ["elderly", "mobility", "shuttle", "transport"],
+    "lastUpdated": "2026-07-06"
+  },
+  {
+    "id": "acc-sensory",
+    "title": "Sensory-Friendly Guidance and Quiet Room Access",
+    "category": "Accessibility",
+    "section": "ACC-04",
+    "content": "Sensory-friendly quiet rooms are located in Sector A (Room A-102) and Sector D (Room D-205). These rooms provide low-lighting, sound dampening, and calming activities. Noise-canceling headphones are available for loan at any Guest Services Suite upon presentation of a valid photo ID.",
+    "priority": "low",
+    "tags": ["sensory", "quiet-room", "headphones", "calm"],
+    "lastUpdated": "2026-07-06"
+  },
+  {
+    "id": "acc-transport",
+    "title": "Dedicated Accessible Transport Drop-Off Points",
+    "category": "Accessibility",
+    "section": "ACC-05",
+    "content": "Dedicated ride-share and paratransit drop-off zones are located directly in front of Gate ADA-East. All vehicles displaying an ADA placard are permitted entry through checkpoint Alpha. Volunteers must keep this lane clear of standard shuttle buses or delivery vehicles.",
+    "priority": "high",
+    "tags": ["transport", "drop-off", "ada-gate", "ride-share"],
+    "lastUpdated": "2026-07-06"
+  }
+]

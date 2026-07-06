@@ -1,0 +1,14 @@
+STADIUMOS AI PRODUCTION TECH STACK
+==================================
+
+- **Framework**: React 19.2.7 (StrictMode)
+- **Language**: TypeScript 6.0.2 (Strict null checks & verbatimModuleSyntax)
+- **Bundler & Build Tool**: Vite 8.1.1 + Rolldown (production asset chunk splitting)
+- **Styling**: Tailwind CSS v4.0 + PostCSS (Autoprefixer, custom glassmorphism design system)
+- **Data Visualization**: Recharts (RadialBarChart, AreaChart, BarChart)
+- **Iconography**: Lucide React
+- **AI Core Integration**: Raw Fetch API client with 10s AbortController timeout & safety settings mapping (no SDK dependency)
+- **Search Engine**: Local keyword token & phrase matching RAG compiler
+- **Caching**: LocalStorage query caching with 5-minute TTL & metrics tracking
+- **Quota Protection**: Session rate limiting (30 requests/session) in sessionStorage
+- **Testing Framework**: Vitest 4.1.10, React Testing Library, and jsdom environment

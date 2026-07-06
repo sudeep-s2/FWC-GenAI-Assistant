@@ -1,0 +1,13 @@
+node_modules
+.env
+.env.local
+.git
+.gitignore
+dist
+coverage
+*.log
+npm-debug.log*
+CVS
+.svn
+.hg
+.gitimport

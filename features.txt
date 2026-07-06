@@ -1,0 +1,24 @@
+STADIUMOS AI FEATURES
+=====================
+
+- [x] Strict TypeScript Data Models (KnowledgeDocument, StadiumScenario, AIResponse, AIStatus, etc.)
+- [x] Local RAG retrieval engine (keyword matching, category filtering, context compiler with citations)
+- [x] 5 realistic FIFA World Cup 2026 Judge Demo Scenarios (Crowd, Fan, Access, Maintenance, Green)
+- [x] Gemini 2.5 Flash integration via direct Fetch API (no heavy SDK)
+- [x] Structured JSON output enforcement via responseMimeType
+- [x] AI Orchestrator pipeline (sanitize → intent → RAG → cache → rate-limit → Gemini → validate → fallback)
+- [x] Function Calling Engine (dispatchVolunteer, dispatchMaintenance, rerouteCrowd, sendAlert)
+- [x] localStorage 5-min TTL response cache with metrics tracking
+- [x] Session rate limiter (30 calls/session) via sessionStorage
+- [x] 10-second AbortController timeout on all API requests
+- [x] Security layer (HTML sanitization, injection detection, prompt size validation)
+- [x] Offline Intelligence Fallback (full AIResponse schema, "Offline Stadium Intelligence Active")
+- [x] AIStatus telemetry structure (geminiAvailable, requestCount, cacheUsage, fallbackCount)
+- [x] Real-Time CommandCenter digital twin dashboard (KPIs, Charts, Incidents)
+- [x] CrowdPulse crowd risk density & gate throttling console
+- [x] FanJourney AI personalized matchday planner UI
+- [x] VolunteerCopilot RAG instruction lookup UI
+- [x] AccessibilityGuardian ADA route builder and elevator assistant
+- [x] SustainabilityAI green optimization console
+- [x] AIResponseCard citation display & action step list
+- [x] AIStatusPanel live session telemetry & rate limit progress bar

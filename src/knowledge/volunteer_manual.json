@@ -1,0 +1,52 @@
+[
+  {
+    "id": "vol-roles",
+    "title": "Volunteer Roles and Shift Responsibilities",
+    "category": "Volunteer Logistics",
+    "section": "VOL-01",
+    "content": "Volunteers are assigned to three primary roles: 1. Ushers (assist with seat direction, queue line order, and gate flow), 2. Ticketing Guides (guide fans to electronic scan turnstiles, direct ticket issues to resolution desks), 3. Guest Ambassadors (provide general stadium layout information, locate lost items, and distribute maps). All shifts begin with a 15-minute briefing from the Sector Supervisor.",
+    "priority": "medium",
+    "tags": ["roles", "usher", "ticketing", "ambassador"],
+    "lastUpdated": "2026-07-06"
+  },
+  {
+    "id": "vol-incident",
+    "title": "Incident Reporting Flow and Safety Escalation",
+    "category": "Volunteer Logistics",
+    "section": "VOL-02",
+    "content": "When a volunteer witnesses a safety hazard (e.g., liquid spills, broken seats, or elevator failure), they must immediately report it to their Sector Supervisor using the StadiumOS App or by locating them in person. For medical or security emergencies, they should contact the Sector Command center immediately. Do not attempt to resolve security conflicts.",
+    "priority": "high",
+    "tags": ["incident", "reporting", "safety", "supervisor"],
+    "lastUpdated": "2026-07-06"
+  },
+  {
+    "id": "vol-lost-fan",
+    "title": "Protocol for Assisting Lost Fans and Unaccompanied Minors",
+    "category": "Volunteer Logistics",
+    "section": "VOL-03",
+    "content": "If a fan reports they are lost or has lost a family member, accompany them to the nearest Guest Services Suite (located at Section 105, 212, and 304). If the lost individual is an unaccompanied minor, the volunteer must notify Sector Command immediately and remain with the minor at the Guest Services Suite until the Liaison Officer arrives. Never announce minor names over the PA system.",
+    "priority": "high",
+    "tags": ["lost-fan", "minor", "guest-services", "reunion"],
+    "lastUpdated": "2026-07-06"
+  },
+  {
+    "id": "vol-comms",
+    "title": "Communication Protocols and Radio Channel Allocation",
+    "category": "Volunteer Logistics",
+    "section": "VOL-04",
+    "content": "Volunteers equipped with radios must maintain strict channel hygiene. Keep messages short and clear. Use standard NATO phonetic alphabet for seat codes. Channel assignments: Channel 1: General Operations, Channel 2: Facilities & Spills, Channel 3: Medical Dispatch, Channel 4: Security Escalations.",
+    "priority": "low",
+    "tags": ["comms", "radio", "channels", "hygiene"],
+    "lastUpdated": "2026-07-06"
+  },
+  {
+    "id": "vol-multilingual",
+    "title": "Multilingual Support and Translation Booth Services",
+    "category": "Volunteer Logistics",
+    "section": "VOL-05",
+    "content": "For international visitors experiencing language barriers, redirect them to the Translation Booths located at Gates B and D. Volunteers should use the translation function on their handheld device for basic questions. If translation fails, request assistance from a multilingual volunteer through the Supervisor.",
+    "priority": "low",
+    "tags": ["languages", "translation", "international", "support"],
+    "lastUpdated": "2026-07-06"
+  }
+]
