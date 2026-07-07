@@ -1,16 +1,17 @@
 import { describe, it, expect } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
 import { useMatchPhase } from '../hooks/useMatchPhase';
+import { AppProvider } from '../context/AppContext';
 
 describe('useMatchPhase custom hook', () => {
   it('should initialize with default PRE_MATCH phase', () => {
-    const { result } = renderHook(() => useMatchPhase());
+    const { result } = renderHook(() => useMatchPhase(), { wrapper: AppProvider });
     expect(result.current.currentPhase).toBe('PRE_MATCH');
     expect(result.current.phaseInfo.focusArea).toContain('Transit');
   });
 
   it('should allow setting a new active match phase', () => {
-    const { result } = renderHook(() => useMatchPhase());
+    const { result } = renderHook(() => useMatchPhase(), { wrapper: AppProvider });
     
     act(() => {
       result.current.setPhase('HALFTIME');

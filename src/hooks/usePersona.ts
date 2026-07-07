@@ -1,5 +1,6 @@
-import { useState, useCallback } from 'react';
+import { useCallback } from 'react';
 import type { Persona } from '../types';
+import { useApp } from '../context/AppContext';
 
 export interface PersonaInfo {
   id: Persona;
@@ -36,17 +37,15 @@ export const PERSONAS: PersonaInfo[] = [
 ];
 
 export function usePersona() {
-  const [currentPersona, setPersonaState] = useState<Persona>(() => {
-    const saved = localStorage.getItem('stadiumos-active-persona');
-    return (saved as Persona) || 'Organizer';
-  });
+  const { state, dispatch } = useApp();
+  const currentPersona = state.persona;
 
   const setPersona = useCallback((persona: Persona) => {
-    setPersonaState(persona);
+    dispatch({ type: 'SET_PERSONA', payload: persona });
     localStorage.setItem('stadiumos-active-persona', persona);
-  }, []);
+  }, [dispatch]);
 
-  const personaInfo = PERSONAS.find(p => p.id === currentPersona) || PERSONAS[2]; // Default to Organizer
+  const personaInfo = PERSONAS.find(p => p.id === currentPersona) || PERSONAS[2];
 
   return {
     currentPersona,

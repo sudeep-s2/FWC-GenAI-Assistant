@@ -135,4 +135,14 @@ export interface AppState {
   gateStatus: GateStatus[];
   incidents: Incident[];
   tasks: VolunteerTask[];
+  matchPhase: MatchPhase;
+  persona: Persona;
+}
+
+export interface PredictiveForecast {
+  currentStatus: string;
+  predictedIssue: string;
+  estimatedTime: string;
+  confidence: string;
+  preventionSteps: string[];
 }

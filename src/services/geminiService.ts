@@ -1,4 +1,5 @@
 import { defaultGeminiConfig } from './geminiConfig';
+import { stripMarkdownJSON } from '../utils/validation';
 
 export interface GeminiServiceResult<T> {
   success: boolean;
@@ -168,7 +169,8 @@ export class GeminiService {
       }
 
       try {
-        const structuredData = JSON.parse(text) as T;
+        const cleanedText = stripMarkdownJSON(text);
+        const structuredData = JSON.parse(cleanedText) as T;
         return { success: true, data: structuredData };
       } catch (parseError) {
         return {

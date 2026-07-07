@@ -1,5 +1,6 @@
-import { useState, useCallback } from 'react';
+import { useCallback } from 'react';
 import type { MatchPhase } from '../types';
+import { useApp } from '../context/AppContext';
 
 export interface MatchPhaseInfo {
   id: MatchPhase;
@@ -36,15 +37,13 @@ export const MATCH_PHASES: MatchPhaseInfo[] = [
 ];
 
 export function useMatchPhase() {
-  const [currentPhase, setPhaseState] = useState<MatchPhase>(() => {
-    const saved = localStorage.getItem('stadiumos-match-phase');
-    return (saved as MatchPhase) || 'PRE_MATCH';
-  });
+  const { state, dispatch } = useApp();
+  const currentPhase = state.matchPhase;
 
   const setPhase = useCallback((phase: MatchPhase) => {
-    setPhaseState(phase);
+    dispatch({ type: 'SET_MATCH_PHASE', payload: phase });
     localStorage.setItem('stadiumos-match-phase', phase);
-  }, []);
+  }, [dispatch]);
 
   const phaseInfo = MATCH_PHASES.find(p => p.id === currentPhase) || MATCH_PHASES[0];
 

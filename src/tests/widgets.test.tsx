@@ -76,6 +76,6 @@ describe('Dashboard Sub-Widgets', () => {
     render(<VolunteerWidget volunteersCount={142} />);
     expect(screen.getByText('Field Logistics')).toBeInTheDocument();
     expect(screen.getByText('142 Amb.')).toBeInTheDocument();
-    expect(screen.getByText(/CH 1: Ingress Operations/i)).toBeInTheDocument();
+    expect(screen.getByText(/MetLife Ingress Control/i)).toBeInTheDocument();
   });
 });

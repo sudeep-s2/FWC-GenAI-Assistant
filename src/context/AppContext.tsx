@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useReducer, type ReactNode } from 'react';
 import type { AppAction } from './actions';
-import type { AppState } from '../types';
+import type { AppState, MatchPhase, Persona } from '../types';
 
 const initialState: AppState = {
   userRole: 'operator',
@@ -10,6 +10,8 @@ const initialState: AppState = {
   gateStatus: [],
   incidents: [],
   tasks: [],
+  matchPhase: (localStorage.getItem('stadiumos-match-phase') as MatchPhase) || 'PRE_MATCH',
+  persona: (localStorage.getItem('stadiumos-active-persona') as Persona) || 'Organizer',
 };
 
 const AppContext = createContext<{
@@ -25,6 +27,10 @@ function appReducer(state: AppState, action: AppAction): AppState {
       return { ...state, geminiStatus: action.payload };
     case 'LOG_EVENT':
       return { ...state, events: [...state.events, action.payload] };
+    case 'SET_MATCH_PHASE':
+      return { ...state, matchPhase: action.payload };
+    case 'SET_PERSONA':
+      return { ...state, persona: action.payload };
     default:
       return state;
   }

@@ -6,6 +6,7 @@ import AIStatusPanel from '../components/shared/AIStatusPanel';
 import CommandCenter from '../components/dashboard/CommandCenter';
 import App from '../App';
 import { ThemeProvider } from '../context/ThemeContext';
+import { AppProvider } from '../context/AppContext';
 import ThemeToggle from '../components/shared/ThemeToggle';
 import OnboardingGuide from '../components/shared/OnboardingGuide';
 import InfoTooltip from '../components/shared/InfoTooltip';
@@ -69,9 +70,11 @@ describe('AIStatusPanel Component', () => {
 describe('CommandCenter Dashboard Component', () => {
   it('should render CommandCenter tabs, titles, and KPIs', () => {
     render(
-      <ThemeProvider>
-        <CommandCenter />
-      </ThemeProvider>
+      <AppProvider>
+        <ThemeProvider>
+          <CommandCenter />
+        </ThemeProvider>
+      </AppProvider>
     );
     
     expect(screen.getByText('FIFA World Cup 2026 Real-Time Operations Intelligence System')).toBeInTheDocument();
@@ -91,9 +94,11 @@ describe('CommandCenter Dashboard Component', () => {
     globalThis.fetch = mockFetch;
 
     render(
-      <ThemeProvider>
-        <CommandCenter />
-      </ThemeProvider>
+      <AppProvider>
+        <ThemeProvider>
+          <CommandCenter />
+        </ThemeProvider>
+      </AppProvider>
     );
     
     const surgeBtn = screen.getByRole('button', { name: /Run demo scenario: FIFA 2026 Crowd Surge at Gate G/i });
@@ -112,9 +117,11 @@ describe('CommandCenter Dashboard Component', () => {
 describe('App Main Entry Navigation', () => {
   it('should render and allow switching dashboard tabs', async () => {
     render(
-      <ThemeProvider>
-        <App />
-      </ThemeProvider>
+      <AppProvider>
+        <ThemeProvider>
+          <App />
+        </ThemeProvider>
+      </AppProvider>
     );
     
     expect(screen.getByText('FIFA World Cup 2026')).toBeInTheDocument();

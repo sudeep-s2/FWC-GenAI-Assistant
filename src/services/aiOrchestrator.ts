@@ -136,7 +136,8 @@ ${phaseFocus}
 Active Persona View: ${activePersona || 'Organizer'}
 ${personaInstructions}
 
-You must return a structured JSON response matching the following schema:
+You must return a structured JSON response matching the following schema.
+CRITICAL: Do NOT wrap the JSON response in markdown code blocks like \`\`\`json or \`\`\`. Output raw JSON text only.
 {
   "content": "detailed operational recommendation and advice tailored to FIFA regulations",
   "confidence": "high" | "medium" | "low",

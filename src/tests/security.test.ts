@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { sanitizeInput, validatePrompt, rateLimiter, resetSessionRateLimit, getSessionCallsRemaining } from '../utils/security';
+import { stripMarkdownJSON } from '../utils/validation';
 
 describe('Security layer checks', () => {
   beforeEach(() => {
@@ -34,3 +35,17 @@ describe('Security layer checks', () => {
     expect(getSessionCallsRemaining()).toBe(0);
   });
 });
+
+describe('Validation parser checks', () => {
+  it('should strip markdown json tags correctly', () => {
+    const raw = '```json\n{"status": "ok"}\n```';
+    expect(stripMarkdownJSON(raw)).toBe('{"status": "ok"}');
+
+    const clean = '{"status": "ok"}';
+    expect(stripMarkdownJSON(clean)).toBe('{"status": "ok"}');
+
+    const textOnly = '```\n{"status": "ok"}\n```';
+    expect(stripMarkdownJSON(textOnly)).toBe('{"status": "ok"}');
+  });
+});
+
