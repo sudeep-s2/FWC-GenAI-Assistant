@@ -74,7 +74,7 @@ describe('CommandCenter Dashboard Component', () => {
       </ThemeProvider>
     );
     
-    expect(screen.getByText('FIFA 2026 Matchday Operations Command Center')).toBeInTheDocument();
+    expect(screen.getByText('FIFA World Cup 2026 Real-Time Operations Intelligence System')).toBeInTheDocument();
     expect(screen.getByText('Spectator Load')).toBeInTheDocument();
     expect(screen.getByText('Active FIFA Incidents')).toBeInTheDocument();
     expect(screen.getByText('Live Incident Log')).toBeInTheDocument();
@@ -117,7 +117,7 @@ describe('App Main Entry Navigation', () => {
       </ThemeProvider>
     );
     
-    expect(screen.getByText('StadiumOS AI')).toBeInTheDocument();
+    expect(screen.getByText('FIFA World Cup 2026')).toBeInTheDocument();
     
     const fanTabs = screen.getAllByRole('button', { name: /FanJourney AI/i });
     fireEvent.click(fanTabs[0]);

@@ -35,12 +35,13 @@ StadiumOS AI features:
 * **First-Visit Onboarding Guide**: Explains the command center tabs and domain features in 30 seconds. Saves state in `localStorage`.
 * **Light / Dark / System Tech Theme Support**: Toggles between dark glassmorphism, a clean high-contrast light mode, and a warm cozy tech milk tea / espresso styling.
 * **InfoTooltips**: Quick guidance icons attached to key dashboards explaining metrics.
-* **Interactive Empty States**: Empty logs show clean placeholder cards with quick reset options.
-* **FIFA Match Context System**: Integrates 6 matchday phases (Arrival, Preparation, First Half, Half-Time, Second Half, Exit) directly affecting RAG search results and Gemini instructions.
-* **30-Minute Predictive Operations**: Allows the operators to input ingress capacity rates and run a predictive risk forecast of crowd bottlenecks.
-* **AI Explainability**: Shows a checkbox checklist of factors considered for every response, detailing live parameters, matching SOP documents, and active phases.
-* **Multilingual Fan Presets**: Ingests queries in English, Spanish, French, Japanese, or Arabic.
-* **Volunteer Action Logs**: Outputs structured Situation, Priority, Action, and Escalation summaries for task coordinators.
+* **Interactive Empty States & Loading States**: Clean reusable layout placeholders and step-by-step progress bars.
+* **Consolidated Match Phase Engine**: Supports `PRE_MATCH`, `ENTRY`, `HALFTIME`, and `POST_MATCH` phases, modifying RAG prompts and Gemini system instructions dynamically.
+* **Active Persona Engine**: Allows simulating `Fan`, `Volunteer`, `Organizer`, or `Accessibility Guest` roles to tailor UI panels and AI context guidelines.
+* **30-Minute Predictive Operations**: Generates structured forecast objects containing currentStatus, predictedIssue, estimatedTime, confidence, and preventionSteps.
+* **AI Explainability Widget**: Renders a checklist of exact factors considered (e.g. Match phase, Crowd density, Stadium SOP, Transport status, Accessibility requirements).
+* **Multilingual Fan Assist**: Ingests and responds to queries in English, Spanish, French, Japanese, and Arabic.
+* **Volunteer Action logs**: Details Situation, Priority, Actions, and Escalations for operations staff.
 
 ## Production Deployment
 

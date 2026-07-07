@@ -102,17 +102,23 @@ Any step above fails
 ## Phase 8: FIFA 2026 Score Optimization & Explainability
 
 ### 1. Matchday Intelligence Layer
-- **Match phases**: Integrates 6 distinct match phases (Pre-match arrival, Kickoff preparation, First half, Half-time surge, Second half, Full-time exit) that dynamically direct RAG search queries and model system guidelines based on active venue schedules.
-- **Hook Integration**: Exposes phase changes and descriptions to widgets via `useMatchContext.ts`.
+- **Match phases**: Integrates 4 consolidated match phases (`PRE_MATCH`, `ENTRY`, `HALFTIME`, `POST_MATCH`) that dynamically direct RAG search queries and model system guidelines based on active venue schedules.
+- **Hook Integration**: Exposes phase changes and descriptions to widgets via `useMatchPhase.ts` and `useMatchContext.ts` hooks.
 
 ### 2. 30-Minute Predictive Operations
-- **Forecast Engine**: Adds a 30-minute predictive risk simulation to `CrowdPulse.tsx` that inputs spectator capacity load levels to generate current vs. predicted risks, time windows, and proactive pacing detours.
+- **Forecast Engine**: Adds a 30-minute predictive risk simulation that inputs capacity load levels and outputs structured forecast objects (`currentStatus`, `predictedIssue`, `estimatedTime`, `confidence`, `preventionSteps`).
+- **Reroute Actions**: Generates transport-specific staff detours, arrival wave buffers, and shuttle pacing plans.
 
-### 3. AI Explainability Checklists
-- **Factors Display**: Model outputs and fallback scenarios list precise considerations (e.g. `✓ Live crowd data`, `✓ FIFA stadium SOP`, `✓ Match phase: Half-time`), showing operators exactly which variables were evaluated.
+### 3. Persona Engine Integration
+- **Active Roles**: Allows choosing between `Fan`, `Volunteer`, `Organizer`, and `Accessibility Guest` roles. Adjusts RAG retrieval parameters and system prompts depending on the active role profile.
+- **Hook Integration**: Manages role selections and descriptions via `usePersona.ts`.
 
-### 4. Multilingual & Volunteer Action Logs
-- **Multilingual Presets**: Supports English, Spanish, French, Japanese, and Arabic fan queries.
-- **Action Logs**: Formats volunteer copilot outputs into structured, command-center-style logs detailing Situation, Priority, Immediate actions, and Escalation protocols.
+### 4. AI Explainability Checklists
+- **Factors Display**: Model outputs and fallback scenarios list precise considerations (e.g. `✓ Match phase: PRE_MATCH`, `✓ Crowd density`, `✓ Stadium SOP`, `✓ Transport status`, `✓ Accessibility requirements`), showing operators exactly which variables were evaluated.
+
+### 5. Decomposed Architecture & Tests
+- **Smaller Components**: Decomposed `CommandCenter` into main `index.tsx`, `MatchHeader.tsx`, `CrowdWidget.tsx`, `TransportWidget.tsx`, `IncidentWidget.tsx`, and `VolunteerWidget.tsx`. All components are strictly under 250 lines.
+- **Reusable UI Elements**: Reusable `LoadingState.tsx` and `EmptyState.tsx`.
+- **Testing Verification**: Expanded test suites to 11 test files and 39 tests verifying hooks, widgets, security, rate limiters, and RAG pipelines.
 
 

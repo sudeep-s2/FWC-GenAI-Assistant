@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import type { AIResponse, MatchPhase } from '../types';
+import type { AIResponse, MatchPhase, Persona } from '../types';
 import { orchestrator } from './useAI';
 
 interface UseAIRequestResult {
@@ -7,7 +7,7 @@ interface UseAIRequestResult {
   loading: boolean;
   elapsedMs: number | null;
   error: string | null;
-  processQuery: (query: string, phase?: MatchPhase) => Promise<void>;
+  processQuery: (query: string, phase?: MatchPhase, persona?: Persona) => Promise<void>;
   reset: () => void;
 }
 
@@ -17,7 +17,7 @@ export function useAIRequest(): UseAIRequestResult {
   const [elapsedMs, setElapsedMs] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const processQuery = useCallback(async (query: string, phase?: MatchPhase) => {
+  const processQuery = useCallback(async (query: string, phase?: MatchPhase, persona?: Persona) => {
     if (!query.trim()) return;
     setLoading(true);
     setResponse(null);
@@ -25,7 +25,7 @@ export function useAIRequest(): UseAIRequestResult {
     setError(null);
     const start = performance.now();
     try {
-      const result = await orchestrator.processRequest(query, phase);
+      const result = await orchestrator.processRequest(query, phase, persona);
       setResponse(result);
       setElapsedMs(Math.round(performance.now() - start));
     } catch (err: unknown) {

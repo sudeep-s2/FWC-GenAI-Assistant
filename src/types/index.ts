@@ -70,7 +70,8 @@ export interface AICitation {
   id: string;
 }
 
-export type MatchPhase = 'arrival' | 'prep' | 'first-half' | 'half-time' | 'second-half' | 'exit';
+export type MatchPhase = 'PRE_MATCH' | 'ENTRY' | 'HALFTIME' | 'POST_MATCH';
+export type Persona = 'Fan' | 'Volunteer' | 'Organizer' | 'Accessibility Guest';
 
 // AI Response Types (reusable for Gemini and Fallback)
 export interface AIResponse {

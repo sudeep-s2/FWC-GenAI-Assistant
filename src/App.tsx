@@ -48,8 +48,8 @@ function App() {
               <Sparkles className="text-stadium-950 font-bold" size={20} />
             </div>
             <div>
-              <span className="text-lg font-black font-display tracking-wider text-gradient-gold">StadiumOS AI</span>
-              <span className="text-xs font-medium text-slate-500 block">FIFA World Cup 2026 Operations Twin</span>
+              <span className="text-lg font-black font-display tracking-wider text-gradient-gold">FIFA World Cup 2026</span>
+              <span className="text-xs font-medium text-slate-400 block">Real-Time Operations Intelligence System</span>
             </div>
           </div>
           <div className="flex items-center gap-4">

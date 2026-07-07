@@ -30,6 +30,14 @@ export class FallbackAI {
           ],
           metadata: {
             priority: 'high',
+            currentStatus: 'Gate G outer perimeter capacity is at 92%. Inbound trains are arriving every 3 minutes.',
+            predictedIssue: 'Gate G ticket scanner bottleneck may exceed safe queue limits in 25 minutes.',
+            estimatedTime: '25 minutes',
+            preventionSteps: [
+              'Set electronic boards to guide incoming fans to Gates F and H.',
+              'Pace shuttle drops and create line queues at the train station exits.',
+              'Deploy 4 volunteers to set up serpentine blocks.'
+            ],
             suggestedTasks: [
               {
                 roleRequired: "Usher",

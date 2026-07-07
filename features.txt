@@ -26,13 +26,14 @@ STADIUMOS AI FEATURES
 - [x] ThemeContext supporting Light, Dark, and System Tech modes
 - [x] ThemeToggle widget (Light / Dark / System settings)
 - [x] InfoTooltip accessibility help buttons on key cards and dashboards
-- [x] Empty state placeholders ("No stadium incidents detected 🎉" with reset buttons)
-- [x] AILoadingState loading pipeline layout representation
-- [x] "Start Demo" quick scenario trigger button
-- [x] FIFA Match Context System (6 match phases directing operational focuses dynamically)
-- [x] 30-Minute Predictive Operations (ingesting capacity loads and forecasting predicted crowd risks and pacing detours)
-- [x] Multilingual World Cup Support (handling English, Spanish, French, Japanese, and Arabic fan queries and presets)
-- [x] Volunteer Action Mode (producing structured Situation, Priority, Action, and Escalation action logs)
-- [x] AI Explainability Widget (revealing live data checklists, matching SOP files, and active phase parameters)
-- [x] Code Quality refactoring (introducing useAIRequest, useMatchContext, and useDemoScenario hooks, keeping all components under 250 lines)
+- [x] Reusable EmptyState component supporting action triggers and responsive illustrations
+- [x] Reusable LoadingState component supporting both general and pipeline-based AI loaders
+- [x] Decomposed CommandCenter dashboard layout (index.tsx, CrowdWidget, TransportWidget, IncidentWidget, VolunteerWidget, MatchHeader)
+- [x] useMatchPhase custom hook managing the 4 uppercase matchday phases (PRE_MATCH, ENTRY, HALFTIME, POST_MATCH)
+- [x] usePersona custom hook supporting 4 active role personas (Fan, Volunteer, Organizer, Accessibility Guest)
+- [x] useStadiumMetrics custom hook keeping all telemetry and chart data states cleanly out of UI components
+- [x] 30-Minute Predictive Operations returning structured forecast objects (currentStatus, predictedIssue, estimatedTime, confidence, preventionSteps)
+- [x] PersonaSelector and MatchPhase picker allowing instant role and phase simulation
+- [x] Explainable AI Widget visualizing precise factors considered for every decision (Match phase, Crowd density, SOP, etc.)
+- [x] 39 active unit and integration tests covering hooks, widgets, API, security, rate limiters, and RAG services
 

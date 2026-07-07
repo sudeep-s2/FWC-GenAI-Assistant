@@ -42,7 +42,7 @@ const CrowdPulse: React.FC = () => {
   };
 
   const densityLevel = 92;
-  const radialData = [{ value: densityLevel, fill: densityLevel > 85 ? '#ef4444' : '#f97316' }];
+  const radialData = [{ value: densityLevel, fill: '#ef4444' }];
 
   return (
     <div className="space-y-6">
@@ -128,7 +128,7 @@ const CrowdPulse: React.FC = () => {
               onChange={e => setQuery(e.target.value)}
               placeholder="Describe crowd situation or custom query details..."
               rows={2}
-              className="w-full bg-stadium-800/60 border border-stadium-700/60 rounded-xl px-4 py-2.5 text-xs text-slate-200 placeholder-slate-600 focus:border-crowd-500/60 focus:outline-none resize-none"
+              className="w-full bg-stadium-800/60 border border-stadium-700/60 rounded-xl px-4 py-2.5 text-xs text-slate-200 placeholder-slate-655 focus:border-crowd-500/60 focus:outline-none resize-none"
             />
             <button
               type="submit"
@@ -153,7 +153,7 @@ const CrowdPulse: React.FC = () => {
             <div className="space-y-4">
               {predictiveMode ? (
                 <div className="p-4 bg-stadium-900/60 rounded-xl border border-gold-500/20 space-y-3">
-                  <div className="flex justify-between items-start">
+                  <div className="flex justify-between items-start border-b border-stadium-800 pb-2 mb-2">
                     <div>
                       <h4 className="text-xs font-bold text-gold-400 uppercase tracking-widest">30-Min Crowd Risk Forecast</h4>
                       <p className="text-[10px] text-slate-500 mt-0.5">Time Window: Next 30 minutes</p>
@@ -174,16 +174,43 @@ const CrowdPulse: React.FC = () => {
                     {response.content}
                   </p>
 
-                  <div className="space-y-1.5">
-                    <h5 className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Preventive Action Plan:</h5>
-                    <ul className="space-y-1">
-                      {response.actions.map((act, i) => (
-                        <li key={i} className="text-xs text-slate-300 flex items-start gap-1.5">
-                          <span className="text-gold-400 font-bold mt-0.5">•</span>
-                          <span>{act}</span>
-                        </li>
-                      ))}
-                    </ul>
+                  {/* Structured Predictive display */}
+                  <div className="space-y-2.5 text-xs">
+                    <div className="grid grid-cols-2 gap-3 bg-stadium-800/40 p-3 rounded-lg border border-stadium-750/30">
+                      <div>
+                        <span className="text-[10px] text-slate-500 uppercase tracking-widest font-semibold block">Current Status</span>
+                        <p className="text-slate-300 mt-0.5">{String(response.metadata.currentStatus || 'Gate load elevated')}</p>
+                      </div>
+                      <div>
+                        <span className="text-[10px] text-slate-500 uppercase tracking-widest font-semibold block">Predicted Issue</span>
+                        <p className="text-slate-300 mt-0.5">{String(response.metadata.predictedIssue || 'Scanner bottleneck predicted')}</p>
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-3 bg-stadium-800/40 p-3 rounded-lg border border-stadium-750/30">
+                      <div>
+                        <span className="text-[10px] text-slate-500 uppercase tracking-widest font-semibold block">Estimated Time Window</span>
+                        <p className="text-slate-300 mt-0.5">{String(response.metadata.estimatedTime || '25 minutes')}</p>
+                      </div>
+                      <div>
+                        <span className="text-[10px] text-slate-500 uppercase tracking-widest font-semibold block">AI Confidence</span>
+                        <p className="text-slate-300 mt-0.5 capitalize">{response.confidence || 'High'}</p>
+                      </div>
+                    </div>
+
+                    <div className="bg-stadium-800/40 p-3 rounded-lg border border-stadium-750/30 space-y-1.5">
+                      <span className="text-[10px] text-slate-500 uppercase tracking-widest font-semibold block">Prevention Steps</span>
+                      <ul className="space-y-1">
+                        {(Array.isArray(response.metadata.preventionSteps) 
+                          ? response.metadata.preventionSteps 
+                          : response.actions).map((step, i) => (
+                            <li key={i} className="text-slate-300 flex items-start gap-2">
+                              <span className="text-gold-450 font-bold">•</span>
+                              <span>{String(step)}</span>
+                            </li>
+                          ))
+                        }
+                      </ul>
+                    </div>
                   </div>
                 </div>
               ) : (
