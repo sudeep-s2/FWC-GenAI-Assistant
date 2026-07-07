@@ -23,7 +23,7 @@ app.get('/api/config', (req, res) => {
 app.use(express.static(path.join(__dirname, 'dist')));
 
 // Fallback all routes to index.html for SPA client-side routing
-app.get('/*', (req, res) => {
+app.get(/.*/, (req, res) => {
   res.sendFile(path.join(__dirname, 'dist', 'index.html'));
 });
 
