@@ -97,4 +97,22 @@ Any step above fails
 - Component renders verified in jsdom using `@testing-library/react` and `vitest`.
 - Recharts responsive wrappers mocked to prevent dimensions failure in virtual DOM.
 
+---
+
+## Phase 8: FIFA 2026 Score Optimization & Explainability
+
+### 1. Matchday Intelligence Layer
+- **Match phases**: Integrates 6 distinct match phases (Pre-match arrival, Kickoff preparation, First half, Half-time surge, Second half, Full-time exit) that dynamically direct RAG search queries and model system guidelines based on active venue schedules.
+- **Hook Integration**: Exposes phase changes and descriptions to widgets via `useMatchContext.ts`.
+
+### 2. 30-Minute Predictive Operations
+- **Forecast Engine**: Adds a 30-minute predictive risk simulation to `CrowdPulse.tsx` that inputs spectator capacity load levels to generate current vs. predicted risks, time windows, and proactive pacing detours.
+
+### 3. AI Explainability Checklists
+- **Factors Display**: Model outputs and fallback scenarios list precise considerations (e.g. `✓ Live crowd data`, `✓ FIFA stadium SOP`, `✓ Match phase: Half-time`), showing operators exactly which variables were evaluated.
+
+### 4. Multilingual & Volunteer Action Logs
+- **Multilingual Presets**: Supports English, Spanish, French, Japanese, and Arabic fan queries.
+- **Action Logs**: Formats volunteer copilot outputs into structured, command-center-style logs detailing Situation, Priority, Immediate actions, and Escalation protocols.
+
 

@@ -10,9 +10,46 @@ export class FallbackAI {
     const offlineHeader = "[Offline Stadium Intelligence Active] ";
     
     switch (scenarioId) {
+      case 'scen-predictive-risk':
+        return {
+          content: `${offlineHeader}FIFA 2026 Matchday Operations Twin 30-minute crowd prediction indicates high-density load propagation at Gate G Outer Perimeter. Gate G ticket scanners will exceed safe load capacity in approximately 25 minutes. Recommended to throttle scanners to 60% and redirect arrival streams to auxiliary gates.`,
+          source: 'OFFLINE_INTELLIGENCE',
+          confidence: 'high',
+          citations: [
+            { source: "stadium_sop.json", section: "SOP-01", id: "sop-crowd-surge" }
+          ],
+          actions: [
+            "Redirection: Set electronic boards to guide incoming fans to Gates F and H.",
+            "Pacing: Set transit buffer lanes to hold incoming flows at the light rail exit.",
+            "Deploy: Dispatch 4 additional Ushers to set up queuing serpentine blocks."
+          ],
+          factorsConsidered: [
+            "Real-time ticket scanner throughput",
+            "FIFA 2026 Matchday arrival velocity schedules",
+            "Metro Transit terminal drop-off rate"
+          ],
+          metadata: {
+            priority: 'high',
+            suggestedTasks: [
+              {
+                roleRequired: "Usher",
+                assignedCount: 4,
+                location: "Gate G Outer Perimeter",
+                description: "Deploy queuing serpentine blocks and redirect arrivals to Gates F and H."
+              }
+            ],
+            requiredToolCalls: [
+              {
+                name: "rerouteCrowd",
+                arguments: { gateId: "Gate-G" }
+              }
+            ]
+          }
+        };
+
       case 'scen-surge-emergency':
         return {
-          content: `${offlineHeader}Immediate crowd buffering protocol required at Gate G Outer Perimeter. Gate G ticket scanners should be throttled to 50% capacity. Open auxiliary Gate F and Gate H to absorb redirected fans.`,
+          content: `${offlineHeader}Immediate FIFA Matchday crowd buffering protocol required at Gate G Outer Perimeter. Gate G ticket scanners should be throttled to 50% capacity. Open auxiliary Gate F and Gate H to absorb redirected fans.`,
           source: 'OFFLINE_INTELLIGENCE',
           confidence: 'high',
           citations: [
@@ -22,6 +59,11 @@ export class FallbackAI {
             "Activate electronic detour signage at Transit Drop-off directing fans to Gates F and H.",
             "Deploy volunteer team to set up serpentine barricades 50m from Gate G.",
             "Alert security command to assist with queue calming."
+          ],
+          factorsConsidered: [
+            "Live gate load cell pressure metrics",
+            "FIFA Stadium SOP-01 (Crowd Control)",
+            "Match Phase: Pre-match Arrival"
           ],
           metadata: {
             priority: 'critical',
@@ -65,6 +107,11 @@ export class FallbackAI {
             "Locate and dispatch a Japanese-speaking Guest Ambassador.",
             "Escort fan safely to Sector B, Section 112, Row 12."
           ],
+          factorsConsidered: [
+            "Spectator Preferred Language (Japanese)",
+            "FIFA Volunteer Manual VOL-05 (Multilingual)",
+            "Ticket Section Validation"
+          ],
           metadata: {
             priority: 'low',
             suggestedTasks: [
@@ -92,6 +139,11 @@ export class FallbackAI {
             "Deploy ADA shuttle vehicle to Light Rail Station Gate.",
             "Provide wheelchair companion seating validation at Sector C check-in.",
             "Verify Elevator 4 is operational and clear of general queues."
+          ],
+          factorsConsidered: [
+            "Spectator accessibility requirement",
+            "FIFA Elevator priority protocol ACC-01/03",
+            "Match Phase: Kickoff Preparation"
           ],
           metadata: {
             priority: 'medium',
@@ -132,6 +184,11 @@ export class FallbackAI {
             "Ushers to cross arms and divert wheelchair users to the parallel ramp bypass.",
             "Confirm spill is cleaned and clear route within 15 minutes."
           ],
+          factorsConsidered: [
+            "Concourse Corridor C-3 wet floor report",
+            "FIFA Emergency Protocols (Spills/Hazards)",
+            "ADA wheelchair detour accessibility routing"
+          ],
           metadata: {
             priority: 'high',
             suggestedTasks: [
@@ -163,6 +220,11 @@ export class FallbackAI {
             "Post Guest Ambassadors at Food Court 3 waste areas to guide sorting.",
             "Display zero-waste infographics on Food Court LED panels.",
             "Log waste contamination metrics for post-match review."
+          ],
+          factorsConsidered: [
+            "Zero-waste compliance rules (VOL-01)",
+            "Sorting bin contamination levels",
+            "Concourse plaza density values"
           ],
           metadata: {
             priority: 'medium',

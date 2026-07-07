@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Accessibility, MapPin, Navigation, Send } from 'lucide-react';
-import { useAI } from '../../hooks/useAI';
+import { useAIRequest } from '../../hooks/useAIRequest';
+import { useMatchContext } from '../../hooks/useMatchContext';
 import AIResponseCard from '../shared/AIResponseCard';
 
 const ACCESS_TYPES = [
@@ -10,7 +11,6 @@ const ACCESS_TYPES = [
   'Hearing Impairment',
   'Elderly / Limited Mobility',
   'Sensory Processing Needs',
-  'Cognitive Accessibility',
 ];
 
 const STADIUM_ZONES = [
@@ -18,11 +18,8 @@ const STADIUM_ZONES = [
   'Main Plaza Entrance',
   'Parking Lot P4',
   'Gate ADA-East',
-  'Gate A',
-  'Gate B',
-  'Gate D',
-  'Concourse Level 1',
-  'Concourse Level 2',
+  'Gate A ticket entrance',
+  'Gate B ticket entrance',
 ];
 
 const DESTINATIONS = [
@@ -32,21 +29,20 @@ const DESTINATIONS = [
   'Sector D — Section 228',
   'Guest Services Suite',
   'First Aid Station Sector A',
-  'Quiet Room A-102',
-  'Quiet Room D-205',
-  'Food Court 2',
 ];
 
 const AccessibilityGuardian: React.FC = () => {
+  const { currentPhase } = useMatchContext();
+  const { response, loading, elapsedMs, processQuery } = useAIRequest();
+  
   const [accessType, setAccessType] = useState(ACCESS_TYPES[0]);
   const [currentLocation, setCurrentLocation] = useState(STADIUM_ZONES[0]);
   const [destination, setDestination] = useState(DESTINATIONS[0]);
-  const { response, loading, elapsedMs, processQuery } = useAI();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const query = `Accessibility assistance required. Visitor has: ${accessType}. Currently at: ${currentLocation}. Destination: ${destination}. Provide the best accessible route including: ADA ramps, elevator numbers, volunteer escort instructions, and any relevant accommodations from the accessibility guidelines.`;
-    await processQuery(query);
+    const query = `Accessibility assistance required for FIFA visitor. Visitor has: ${accessType}. Currently at: ${currentLocation}. Destination: ${destination}. Provide the best accessible route including: ADA ramps, elevator numbers, volunteer escort instructions, and any relevant accommodations from accessibility rules.`;
+    await processQuery(query, currentPhase);
   };
 
   return (
@@ -54,55 +50,52 @@ const AccessibilityGuardian: React.FC = () => {
       <div className="glass-card p-5 border border-ai-500/20 glow-ai">
         <div className="flex items-center gap-3 mb-1">
           <Accessibility size={20} className="text-ai-400" aria-hidden="true" />
-          <h2 className="text-xl font-bold font-display text-gradient-ai">Accessibility Guardian — AI Routing Assistant</h2>
+          <h2 className="text-xl font-bold font-display text-gradient-ai">FIFA 2026 Accessibility Guardian</h2>
         </div>
-        <p className="text-slate-400 text-sm">ADA-compliant pathways and accommodations powered by Gemini AI</p>
+        <p className="text-slate-400 text-sm">FIFA World Cup 2026 · ADA-compliant pathway planner & elevator routing assistant</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
-        <form onSubmit={handleSubmit} className="lg:col-span-2 glass-card p-6 space-y-5" noValidate aria-label="Accessibility assistance request form">
-          <h3 className="text-sm font-semibold text-slate-300 uppercase tracking-widest">Request Assistance</h3>
+        <form onSubmit={handleSubmit} className="lg:col-span-2 glass-card p-5 space-y-4" noValidate>
+          <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-widest">Request Route Assist</h3>
 
           <div>
-            <label htmlFor="acc-type" className="block text-xs text-slate-400 mb-1.5">
-              <Accessibility size={11} className="inline mr-1" aria-hidden="true" />Accessibility Requirement
+            <label htmlFor="acc-type" className="block text-xs text-slate-400 mb-1">
+              <Accessibility size={11} className="inline mr-1" aria-hidden="true" />Requirement Type
             </label>
             <select
               id="acc-type"
               value={accessType}
               onChange={e => setAccessType(e.target.value)}
-              aria-label="Select accessibility type"
-              className="w-full bg-stadium-800/60 border border-stadium-500/40 rounded-xl px-4 py-2.5 text-sm text-slate-200 focus:border-ai-500/60 focus:outline-none transition-colors cursor-pointer"
+              className="w-full bg-stadium-800 border border-stadium-700/60 rounded-xl px-3 py-2 text-xs text-slate-200 focus:border-ai-500/60 focus:outline-none cursor-pointer"
             >
               {ACCESS_TYPES.map(a => <option key={a} value={a}>{a}</option>)}
             </select>
           </div>
 
           <div>
-            <label htmlFor="acc-current" className="block text-xs text-slate-400 mb-1.5">
-              <MapPin size={11} className="inline mr-1" aria-hidden="true" />Current Location
+            <label htmlFor="acc-current" className="block text-xs text-slate-400 mb-1">
+              <MapPin size={11} className="inline mr-1" aria-hidden="true" />Origin Location
             </label>
             <select
               id="acc-current"
               value={currentLocation}
               onChange={e => setCurrentLocation(e.target.value)}
-              aria-label="Select current location"
-              className="w-full bg-stadium-800/60 border border-stadium-500/40 rounded-xl px-4 py-2.5 text-sm text-slate-200 focus:border-ai-500/60 focus:outline-none transition-colors cursor-pointer"
+              className="w-full bg-stadium-800 border border-stadium-700/60 rounded-xl px-3 py-2 text-xs text-slate-200 focus:border-ai-500/60 focus:outline-none cursor-pointer"
             >
               {STADIUM_ZONES.map(z => <option key={z} value={z}>{z}</option>)}
             </select>
           </div>
 
           <div>
-            <label htmlFor="acc-dest" className="block text-xs text-slate-400 mb-1.5">
-              <Navigation size={11} className="inline mr-1" aria-hidden="true" />Destination
+            <label htmlFor="acc-dest" className="block text-xs text-slate-400 mb-1">
+              <Navigation size={11} className="inline mr-1" aria-hidden="true" />Target Destination
             </label>
             <select
               id="acc-dest"
               value={destination}
               onChange={e => setDestination(e.target.value)}
-              aria-label="Select destination"
-              className="w-full bg-stadium-800/60 border border-stadium-500/40 rounded-xl px-4 py-2.5 text-sm text-slate-200 focus:border-ai-500/60 focus:outline-none transition-colors cursor-pointer"
+              className="w-full bg-stadium-800 border border-stadium-700/60 rounded-xl px-3 py-2 text-xs text-slate-200 focus:border-ai-500/60 focus:outline-none cursor-pointer"
             >
               {DESTINATIONS.map(d => <option key={d} value={d}>{d}</option>)}
             </select>
@@ -111,59 +104,62 @@ const AccessibilityGuardian: React.FC = () => {
           <button
             type="submit"
             disabled={loading}
-            className="w-full flex items-center justify-center gap-2 py-3 bg-ai-600 hover:bg-ai-500 disabled:opacity-40 disabled:cursor-not-allowed rounded-xl text-sm font-bold text-white transition-all cursor-pointer"
-            aria-label="Generate accessible route with AI"
+            className="w-full flex items-center justify-center gap-1.5 py-2.5 bg-ai-600 hover:bg-ai-500 disabled:opacity-40 disabled:cursor-not-allowed rounded-xl text-xs font-bold text-white transition-all cursor-pointer"
           >
-            {loading
-              ? <><div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" aria-hidden="true" />Finding Route…</>
-              : <><Send size={14} aria-hidden="true" />Generate Accessible Route</>}
+            <Send size={13} aria-hidden="true" />
+            {loading ? 'Finding Path...' : 'Generate Accessible Route'}
           </button>
         </form>
 
         <div className="lg:col-span-3 space-y-4">
-          {/* ADA Quick Reference */}
-          <div className="glass-card p-5">
-            <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-3">ADA Quick Reference</h3>
-            <div className="grid grid-cols-1 gap-2">
+          {/* ADA Directory */}
+          <div className="glass-card p-4">
+            <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-3">FIFA ADA Infrastructure</h3>
+            <div className="grid grid-cols-1 gap-2 text-xs">
               {[
-                { icon: '🛗', label: 'ADA Elevator 3', detail: 'Sector B — Lower to Upper Tier' },
-                { icon: '🛗', label: 'ADA Elevator 4', detail: 'Sector C — Lower to Upper Tier' },
-                { icon: '♿', label: 'ADA Ramp 1', detail: 'Main Plaza → Lower Concourse (1:12 slope)' },
-                { icon: '🚌', label: 'Golf Cart Shuttle', detail: 'Lot P4 ↔ Light Rail Station ↔ Gate A' },
-                { icon: '🔇', label: 'Quiet Room A-102', detail: 'Sensory-friendly, noise dampening' },
-                { icon: '🔇', label: 'Quiet Room D-205', detail: 'Low-lighting, calming environment' },
+                { icon: '🛗', label: 'ADA Elevator 3', detail: 'Sector B — Access to wheelchair decks Section 204' },
+                { icon: '🛗', label: 'ADA Elevator 4', detail: 'Sector C — Access to wheelchair decks Section 104' },
+                { icon: '♿', label: 'ADA Ramp 1', detail: 'Main Transit Plaza → Lower Concourse (1:12 regulation slope)' },
+                { icon: '🚌', label: 'ADA Shuttles', detail: 'Operates continuously between Lot P4, Rail Station & Gate A' },
               ].map((item, i) => (
-                <div key={i} className="flex items-center gap-3 px-3 py-2 rounded-lg bg-stadium-700/30 border border-stadium-500/20">
+                <div key={i} className="flex items-center gap-3 px-3 py-2 rounded-lg bg-stadium-800/40 border border-stadium-700/50">
                   <span className="text-base" aria-hidden="true">{item.icon}</span>
                   <div>
                     <p className="text-xs font-semibold text-ai-400">{item.label}</p>
-                    <p className="text-xs text-slate-500">{item.detail}</p>
+                    <p className="text-[10px] text-slate-500">{item.detail}</p>
                   </div>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* AI Response */}
-          {response && !loading && (
-            <AIResponseCard response={response} elapsedMs={elapsedMs} ragEnabled />
-          )}
           {loading && (
             <div className="glass-card p-5 text-center">
               <div className="w-8 h-8 border-2 border-ai-500 border-t-transparent rounded-full animate-spin mx-auto mb-3" aria-hidden="true" />
-              <p className="text-sm text-ai-400 font-medium">Mapping accessible route…</p>
-              <p className="text-xs text-slate-500 mt-1">Grounding in accessibility_rules.json</p>
+              <p className="text-xs text-ai-400 font-bold">Querying RAG database for ADA elevators and pathways...</p>
+            </div>
+          )}
+
+          {response && !loading && (
+            <div className="space-y-4">
+              <AIResponseCard response={response} elapsedMs={elapsedMs} ragEnabled />
+              
+              {/* Explainability factors */}
+              {response.factorsConsidered && (
+                <div className="p-3 bg-stadium-900/60 rounded-xl border border-stadium-700/50">
+                  <p className="text-xs font-bold text-slate-400 mb-2 uppercase tracking-wider">AI Explainability — Factors Considered:</p>
+                  <div className="flex flex-wrap gap-2">
+                    {response.factorsConsidered.map((f, i) => (
+                      <span key={i} className="inline-flex items-center gap-1 text-[10px] text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-lg border border-emerald-500/20 font-medium">
+                        ✓ {f}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </div>
-      </div>
-
-      {/* Companion seating notice */}
-      <div className="glass-card p-4 border border-ai-500/20 bg-ai-600/5 flex items-start gap-3">
-        <span className="text-lg" aria-hidden="true">♿</span>
-        <p className="text-xs text-slate-400">
-          <span className="text-ai-400 font-semibold">ADA Companion Policy:</span> Each ADA visitor is entitled to 1 complimentary companion ticket. Accessible seating platforms (Sections 102, 114, 204, 228) include power outlets for motorized wheelchairs.
-        </p>
       </div>
     </div>
   );

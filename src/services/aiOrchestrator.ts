@@ -3,7 +3,7 @@ import { RAGEngine } from './ragEngine';
 import { AICache } from './aiCache';
 import { GeminiService } from './geminiService';
 import { FallbackAI } from './fallbackAI';
-import type { AIResponse, AIStatus } from '../types';
+import type { AIResponse, AIStatus, MatchPhase } from '../types';
 
 export class AIOrchestrator {
   private ragEngine: RAGEngine;
@@ -39,6 +39,9 @@ export class AIOrchestrator {
 
   detectIntent(input: string): string {
     const query = input.toLowerCase();
+    if (query.includes('predictive') || query.includes('prediction') || query.includes('30-minute') || query.includes('30 min') || query.includes('forecast')) {
+      return 'predictive';
+    }
     if (query.includes('surge') || query.includes('crowd') || query.includes('gate g') || query.includes('density') || query.includes('congest')) {
       return 'surge';
     }
@@ -57,7 +60,7 @@ export class AIOrchestrator {
     return 'general';
   }
 
-  async processRequest(userInput: string): Promise<AIResponse> {
+  async processRequest(userInput: string, matchPhase?: MatchPhase): Promise<AIResponse> {
     // 1. Sanitize user input
     const sanitized = sanitizeInput(userInput);
 
@@ -90,22 +93,39 @@ export class AIOrchestrator {
     if (!allowedByRateLimit) {
       console.warn('AIOrchestrator: Rate limit exceeded. Triggering Fallback.');
       this.cache.incrementMetric('fallbackActivations');
-      return this.getFallbackResponseForIntent(intent, new Error('Rate limit exceeded (30 calls per session)'));
+      return this.getFallbackResponseForIntent(intent, new Error('Rate limit exceeded (30 calls per session)'), matchPhase);
     }
 
     // 6. Gemini API Request
     this.cache.incrementMetric('geminiCalls');
 
-    const systemInstruction = `You are the StadiumOS AI Main Operations Twin.
+    let phaseFocus = 'Focus areas: Matchday Operations perimeter monitoring.';
+    if (matchPhase) {
+      if (matchPhase === 'arrival' || matchPhase === 'prep') {
+        phaseFocus = 'Focus areas: Transit arrival volumes, ticket gates, outer security checkpoints, and perimeter entry flow.';
+      } else if (matchPhase === 'first-half' || matchPhase === 'second-half') {
+        phaseFocus = 'Focus areas: Seating bowl emergency standbys, exit route clearances, and inside seating assistance.';
+      } else if (matchPhase === 'half-time') {
+        phaseFocus = 'Focus areas: Concession stand queues, waste & recycling controls, and restroom flow lines.';
+      } else if (matchPhase === 'exit') {
+        phaseFocus = 'Focus areas: Spectator exit waves, public transit lines, egress pathways, and post-match sweeps.';
+      }
+    }
+
+    const systemInstruction = `You are the FIFA 2026 Matchday Operations Command Center AI Twin.
 Below is the grounding context from the stadium databases. Use it to answer the user query.
 Grounding Context:
 ${ragResult.context}
 
+Active Match Phase: ${matchPhase || 'arrival'}
+${phaseFocus}
+
 You must return a structured JSON response matching the following schema:
 {
-  "content": "detailed operational recommendation and advice",
+  "content": "detailed operational recommendation and advice tailored to FIFA regulations",
   "confidence": "high" | "medium" | "low",
   "actions": ["suggested action step 1", "suggested action step 2"],
+  "factorsConsidered": ["e.g. Live crowd data", "FIFA stadium SOP", "Match phase: ..."],
   "metadata": {
     "priority": "low" | "medium" | "high" | "critical",
     "suggestedTasks": [
@@ -149,6 +169,11 @@ You must return a structured JSON response matching the following schema:
             };
           }),
           actions: gData.actions,
+          factorsConsidered: gData.factorsConsidered || [
+            'Live crowd data',
+            'FIFA stadium SOP',
+            `Match phase: ${matchPhase || 'arrival'}`
+          ],
           metadata: gData.metadata || {}
         };
 
@@ -161,12 +186,13 @@ You must return a structured JSON response matching the following schema:
     console.warn('AIOrchestrator: Gemini request failed or response validation failed. Falling back to local offline intelligence.');
     this.cache.incrementMetric('fallbackActivations');
     const apiError = new Error(geminiResult.error || 'Response validation failed');
-    return this.getFallbackResponseForIntent(intent, apiError);
+    return this.getFallbackResponseForIntent(intent, apiError, matchPhase);
   }
 
-  private getFallbackResponseForIntent(intent: string, error: Error): AIResponse {
+  private getFallbackResponseForIntent(intent: string, error: Error, matchPhase?: MatchPhase): AIResponse {
     let scenarioId = 'general';
-    if (intent === 'surge') scenarioId = 'scen-surge-emergency';
+    if (intent === 'predictive') scenarioId = 'scen-predictive-risk';
+    else if (intent === 'surge') scenarioId = 'scen-surge-emergency';
     else if (intent === 'lost-fan') scenarioId = 'scen-lost-fan';
     else if (intent === 'accessibility') scenarioId = 'scen-accessibility-request';
     else if (intent === 'maintenance') scenarioId = 'scen-maintenance-incident';
@@ -177,6 +203,16 @@ You must return a structured JSON response matching the following schema:
       ...fallbackResponse.metadata,
       triggerError: error.message
     };
+    
+    // Add default explainability factors for fallback
+    if (!fallbackResponse.factorsConsidered) {
+      fallbackResponse.factorsConsidered = [
+        'Live crowd data',
+        'FIFA stadium SOP',
+        `Match phase: ${matchPhase || 'arrival'}`
+      ];
+    }
+    
     return fallbackResponse;
   }
 }

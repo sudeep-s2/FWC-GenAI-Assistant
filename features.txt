@@ -29,3 +29,10 @@ STADIUMOS AI FEATURES
 - [x] Empty state placeholders ("No stadium incidents detected 🎉" with reset buttons)
 - [x] AILoadingState loading pipeline layout representation
 - [x] "Start Demo" quick scenario trigger button
+- [x] FIFA Match Context System (6 match phases directing operational focuses dynamically)
+- [x] 30-Minute Predictive Operations (ingesting capacity loads and forecasting predicted crowd risks and pacing detours)
+- [x] Multilingual World Cup Support (handling English, Spanish, French, Japanese, and Arabic fan queries and presets)
+- [x] Volunteer Action Mode (producing structured Situation, Priority, Action, and Escalation action logs)
+- [x] AI Explainability Widget (revealing live data checklists, matching SOP files, and active phase parameters)
+- [x] Code Quality refactoring (introducing useAIRequest, useMatchContext, and useDemoScenario hooks, keeping all components under 250 lines)
+

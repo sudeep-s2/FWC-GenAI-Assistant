@@ -70,6 +70,8 @@ export interface AICitation {
   id: string;
 }
 
+export type MatchPhase = 'arrival' | 'prep' | 'first-half' | 'half-time' | 'second-half' | 'exit';
+
 // AI Response Types (reusable for Gemini and Fallback)
 export interface AIResponse {
   content: string;
@@ -77,6 +79,7 @@ export interface AIResponse {
   confidence: string;
   citations: AICitation[];
   actions: string[];
+  factorsConsidered?: string[];
   metadata: {
     priority?: 'low' | 'medium' | 'high' | 'critical';
     suggestedTasks?: Omit<VolunteerTask, 'id' | 'status'>[];

@@ -74,9 +74,9 @@ describe('CommandCenter Dashboard Component', () => {
       </ThemeProvider>
     );
     
-    expect(screen.getByText('Mission Control — Command Center')).toBeInTheDocument();
-    expect(screen.getByText('Crowd Level')).toBeInTheDocument();
-    expect(screen.getByText('Active Incidents')).toBeInTheDocument();
+    expect(screen.getByText('FIFA 2026 Matchday Operations Command Center')).toBeInTheDocument();
+    expect(screen.getByText('Spectator Load')).toBeInTheDocument();
+    expect(screen.getByText('Active FIFA Incidents')).toBeInTheDocument();
     expect(screen.getByText('Live Incident Log')).toBeInTheDocument();
   });
 
@@ -96,15 +96,15 @@ describe('CommandCenter Dashboard Component', () => {
       </ThemeProvider>
     );
     
-    const surgeBtn = screen.getByRole('button', { name: /Run demo scenario: Crowd Surge Emergency at Gate G/i });
+    const surgeBtn = screen.getByRole('button', { name: /Run demo scenario: FIFA 2026 Crowd Surge at Gate G/i });
     expect(surgeBtn).toBeInTheDocument();
     
     fireEvent.click(surgeBtn);
     
-    expect(screen.getByText(/Processing scenario through GenAI twin/i)).toBeInTheDocument();
+    expect(screen.getByText(/Orchestrating RAG context/i)).toBeInTheDocument();
     
     await waitFor(() => {
-      expect(screen.getByText(/Immediate crowd buffering protocol/i)).toBeInTheDocument();
+      expect(screen.getByText(/Immediate FIFA Matchday crowd buffering protocol/i)).toBeInTheDocument();
     }, { timeout: 3000 });
   });
 });

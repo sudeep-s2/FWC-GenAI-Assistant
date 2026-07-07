@@ -36,7 +36,11 @@ StadiumOS AI features:
 * **Light / Dark / System Tech Theme Support**: Toggles between dark glassmorphism, a clean high-contrast light mode, and a warm cozy tech milk tea / espresso styling.
 * **InfoTooltips**: Quick guidance icons attached to key dashboards explaining metrics.
 * **Interactive Empty States**: Empty logs show clean placeholder cards with quick reset options.
-* **"Start Demo" Trigger**: Initiates pre-configured stadium scenarios and launches the AI flow with one click.
+* **FIFA Match Context System**: Integrates 6 matchday phases (Arrival, Preparation, First Half, Half-Time, Second Half, Exit) directly affecting RAG search results and Gemini instructions.
+* **30-Minute Predictive Operations**: Allows the operators to input ingress capacity rates and run a predictive risk forecast of crowd bottlenecks.
+* **AI Explainability**: Shows a checkbox checklist of factors considered for every response, detailing live parameters, matching SOP documents, and active phases.
+* **Multilingual Fan Presets**: Ingests queries in English, Spanish, French, Japanese, or Arabic.
+* **Volunteer Action Logs**: Outputs structured Situation, Priority, Action, and Escalation summaries for task coordinators.
 
 ## Production Deployment
 
