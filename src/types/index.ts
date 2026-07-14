@@ -76,7 +76,7 @@ export type Persona = 'Fan' | 'Volunteer' | 'Organizer' | 'Accessibility Guest';
 // AI Response Types (reusable for Gemini and Fallback)
 export interface AIResponse {
   content: string;
-  source: 'GEMINI' | 'OFFLINE_INTELLIGENCE';
+  source: 'GEMINI' | 'OPENAI' | 'GROQ' | 'OFFLINE_INTELLIGENCE';
   confidence: string;
   citations: AICitation[];
   actions: string[];

@@ -89,4 +89,44 @@ describe('AIOrchestrator pipeline', () => {
     expect(result.metadata.triggerError).toContain('Rate limit exceeded');
     expect(mockFetch).not.toHaveBeenCalled();
   });
+
+  it('should fall back to OpenAI when Gemini fails and OpenAI key is configured', async () => {
+    vi.stubEnv('VITE_OPENAI_API_KEY', 'test-openai-key');
+
+    // First fetch call is Gemini (fail)
+    mockFetch.mockResolvedValueOnce({
+      ok: false,
+      status: 500,
+      text: async () => 'Gemini Failed'
+    });
+
+    // Second fetch call is OpenAI (success)
+    const mockOpenAIResponse = {
+      choices: [
+        {
+          message: {
+            content: JSON.stringify({
+              content: 'OpenAI synthesized response.',
+              confidence: 'medium',
+              actions: ['OpenAI action'],
+              factorsConsidered: ['✓ OpenAI test']
+            })
+          }
+        }
+      ]
+    };
+    mockFetch.mockResolvedValueOnce({
+      ok: true,
+      status: 200,
+      json: async () => mockOpenAIResponse
+    });
+
+    const orchestrator = new AIOrchestrator();
+    const result = await orchestrator.processRequest('surge at Gate G');
+
+    expect(result.source).toBe('OPENAI');
+    expect(result.content).toBe('OpenAI synthesized response.');
+    expect(result.actions).toContain('OpenAI action');
+    vi.unstubAllEnvs();
+  });
 });

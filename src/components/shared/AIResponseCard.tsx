@@ -40,7 +40,7 @@ const PriorityBadge: React.FC<{ priority: string }> = ({ priority }) => {
 const AIResponseCard: React.FC<AIResponseCardProps> = React.memo(({ response, elapsedMs, ragEnabled = true }) => {
   const [citationsOpen, setCitationsOpen] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
-  const isGemini = response.source === 'GEMINI';
+  const hasOnlineAI = response.source === 'GEMINI' || response.source === 'OPENAI' || response.source === 'GROQ';
   const priority = response.metadata?.priority as string | undefined;
 
   // Deriving confidence percentage based on category
@@ -149,20 +149,30 @@ const AIResponseCard: React.FC<AIResponseCardProps> = React.memo(({ response, el
 
   return (
     <div
-      className={`glass-card p-5 fade-slide-in ${isGemini ? 'glow-ai' : 'glow-gold'}`}
+      className={`glass-card p-5 fade-slide-in ${hasOnlineAI ? 'glow-ai' : 'glow-gold'}`}
       role="region"
       aria-label="AI Response"
     >
       {/* Header row */}
       <div className="flex flex-wrap items-center gap-3 mb-4">
         <div className={`flex items-center gap-2 px-3 py-1 rounded-full text-sm font-semibold border ${
-          isGemini
+          response.source === 'GEMINI'
             ? 'bg-violet-500/20 text-violet-300 border-violet-500/40'
+            : response.source === 'OPENAI'
+            ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
+            : response.source === 'GROQ'
+            ? 'bg-orange-500/20 text-orange-300 border-orange-500/40'
             : 'bg-amber-500/20 text-amber-300 border-amber-500/40'
         }`}>
-          {isGemini
-            ? <><Zap size={14} aria-hidden="true" /><span>GEMINI AI</span></>
-            : <><Radio size={14} aria-hidden="true" /><span>OFFLINE INTELLIGENCE</span></>}
+          {response.source === 'GEMINI' ? (
+            <><Zap size={14} aria-hidden="true" /><span>GEMINI AI</span></>
+          ) : response.source === 'OPENAI' ? (
+            <><Zap size={14} aria-hidden="true" /><span>OPENAI CO-PILOT</span></>
+          ) : response.source === 'GROQ' ? (
+            <><Zap size={14} aria-hidden="true" /><span>GROQ (GROK) SERVICE</span></>
+          ) : (
+            <><Radio size={14} aria-hidden="true" /><span>OFFLINE INTELLIGENCE</span></>
+          )}
         </div>
 
         <ConfidenceBadge confidence={response.confidence} />

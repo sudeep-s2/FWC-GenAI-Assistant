@@ -165,63 +165,100 @@ CRITICAL: Do NOT wrap the JSON response in markdown code blocks like \`\`\`json 
       systemInstruction
     );
 
-    // Layer 2: Provider Failover & Retry
-    if (!geminiResult.success) {
+    let apiData: Omit<AIResponse, 'source' | 'citations'> | null = null;
+    let finalSource: 'GEMINI' | 'OPENAI' | 'GROQ' = 'GEMINI';
+    let errorMessage = geminiResult.error || 'Response validation failed';
+
+    if (geminiResult.success && geminiResult.data) {
+      apiData = geminiResult.data;
+    } else {
+      // Try backup Gemini Key if available
       const backupKey = import.meta.env.VITE_BACKUP_GEMINI_API_KEY;
       if (backupKey) {
-        console.warn('[Failover Engine] Primary API key failed. Swapping credentials and retrying request.');
+        console.warn('[Failover Engine] Primary Gemini key failed. Swapping credentials and retrying.');
         this.geminiService.setApiKey(backupKey);
-        geminiResult = await this.geminiService.generateStructuredResponse<Omit<AIResponse, 'source' | 'citations'>>(
+        const retryResult = await this.geminiService.generateStructuredResponse<Omit<AIResponse, 'source' | 'citations'>>(
           prompt,
           systemInstruction
         );
+        if (retryResult.success && retryResult.data) {
+          apiData = retryResult.data;
+        } else {
+          errorMessage = retryResult.error || errorMessage;
+        }
+      }
+
+      // Try OpenAI if still failed
+      if (!apiData) {
+        const openaiKey = import.meta.env.VITE_OPENAI_API_KEY;
+        if (openaiKey) {
+          console.warn('[Failover Engine] Primary/Backup Gemini keys failed. Initiating failover to OpenAI...');
+          const openaiResult = await this.fetchOpenAI(prompt, systemInstruction, openaiKey);
+          if (openaiResult.success && openaiResult.data) {
+            apiData = openaiResult.data;
+            finalSource = 'OPENAI';
+          } else {
+            errorMessage = openaiResult.error || errorMessage;
+          }
+        }
+      }
+
+      // Try Groq if still failed
+      if (!apiData) {
+        const groqKey = import.meta.env.VITE_GROQ_API_KEY;
+        if (groqKey) {
+          console.warn('[Failover Engine] Gemini and OpenAI keys failed. Initiating failover to Groq...');
+          const groqResult = await this.fetchGroq(prompt, systemInstruction, groqKey);
+          if (groqResult.success && groqResult.data) {
+            apiData = groqResult.data;
+            finalSource = 'GROQ';
+          } else {
+            errorMessage = groqResult.error || errorMessage;
+          }
+        }
       }
     }
 
     // 7. Response Validation & Return
-    if (geminiResult.success && geminiResult.data) {
-      const gData = geminiResult.data;
-      
-      if (typeof gData.content === 'string' && Array.isArray(gData.actions)) {
-        const fullResponse: AIResponse = {
-          content: gData.content,
-          source: 'GEMINI',
-          confidence: gData.confidence || 'medium',
-          citations: ragResult.documents.map(doc => {
-            const getSourceFile = (category: string): string => {
-              switch (category.toLowerCase()) {
-                case 'accessibility': return 'accessibility_rules.json';
-                case 'volunteer logistics': return 'volunteer_manual.json';
-                case 'emergency protocols': return 'emergency_protocols.json';
-                default: return 'stadium_sop.json';
-              }
-            };
-            return {
-              source: getSourceFile(doc.category),
-              section: doc.section,
-              id: doc.id
-            };
-          }),
-          actions: gData.actions,
-          factorsConsidered: gData.factorsConsidered || [
-            '✓ Match phase',
-            '✓ Crowd density',
-            '✓ Stadium SOP',
-            '✓ Transport status',
-            `✓ Active Persona: ${activePersona || 'Organizer'}`
-          ],
-          metadata: gData.metadata || {}
-        };
+    if (apiData && typeof apiData.content === 'string' && Array.isArray(apiData.actions)) {
+      const fullResponse: AIResponse = {
+        content: apiData.content,
+        source: finalSource,
+        confidence: apiData.confidence || 'medium',
+        citations: ragResult.documents.map(doc => {
+          const getSourceFile = (category: string): string => {
+            switch (category.toLowerCase()) {
+              case 'accessibility': return 'accessibility_rules.json';
+              case 'volunteer logistics': return 'volunteer_manual.json';
+              case 'emergency protocols': return 'emergency_protocols.json';
+              default: return 'stadium_sop.json';
+            }
+          };
+          return {
+            source: getSourceFile(doc.category),
+            section: doc.section,
+            id: doc.id
+          };
+        }),
+        actions: apiData.actions,
+        factorsConsidered: apiData.factorsConsidered || [
+          '✓ Match phase',
+          '✓ Crowd density',
+          '✓ Stadium SOP',
+          '✓ Transport status',
+          `✓ Active Persona: ${activePersona || 'Organizer'}`
+        ],
+        metadata: apiData.metadata || {}
+      };
 
-        this.cache.set(sanitized, fullResponse);
-        return fullResponse;
-      }
+      this.cache.set(sanitized, fullResponse);
+      return fullResponse;
     }
 
     // 8. Failure Flow -> Fallback Intelligence
-    console.warn('AIOrchestrator: Gemini request failed or response validation failed. Falling back to local offline intelligence.');
+    console.warn('AIOrchestrator: All configured AI services failed or response validation failed. Falling back to local offline intelligence.');
     this.cache.incrementMetric('fallbackActivations');
-    const apiError = new Error(geminiResult.error || 'Response validation failed');
+    const apiError = new Error(errorMessage);
     return this.getFallbackResponseForIntent(intent, apiError, matchPhase, activePersona, sanitized, ragResult.documents);
   }
 
@@ -270,5 +307,87 @@ CRITICAL: Do NOT wrap the JSON response in markdown code blocks like \`\`\`json 
       triggerError: error.message
     };
     return fallbackResponse;
+  }
+
+  private async fetchOpenAI(
+    prompt: string,
+    systemInstruction: string,
+    apiKey: string
+  ): Promise<{ success: boolean; data?: any; error?: string }> {
+    try {
+      const response = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiKey}`
+        },
+        body: JSON.stringify({
+          model: 'gpt-4o-mini',
+          messages: [
+            { role: 'system', content: systemInstruction },
+            { role: 'user', content: prompt }
+          ],
+          temperature: 0.2,
+          response_format: { type: 'json_object' }
+        })
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        return { success: false, error: `OpenAI error ${response.status}: ${errorText}` };
+      }
+
+      const resJson = await response.json();
+      const contentText = resJson.choices?.[0]?.message?.content;
+      if (!contentText) {
+        return { success: false, error: 'OpenAI returned empty message content.' };
+      }
+
+      const data = JSON.parse(contentText);
+      return { success: true, data };
+    } catch (e: any) {
+      return { success: false, error: e.message };
+    }
+  }
+
+  private async fetchGroq(
+    prompt: string,
+    systemInstruction: string,
+    apiKey: string
+  ): Promise<{ success: boolean; data?: any; error?: string }> {
+    try {
+      const response = await fetch('https://api.groq.com/openapi/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiKey}`
+        },
+        body: JSON.stringify({
+          model: 'llama-3.3-70b-versatile',
+          messages: [
+            { role: 'system', content: systemInstruction },
+            { role: 'user', content: prompt }
+          ],
+          temperature: 0.2,
+          response_format: { type: 'json_object' }
+        })
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        return { success: false, error: `Groq error ${response.status}: ${errorText}` };
+      }
+
+      const resJson = await response.json();
+      const contentText = resJson.choices?.[0]?.message?.content;
+      if (!contentText) {
+        return { success: false, error: 'Groq returned empty message content.' };
+      }
+
+      const data = JSON.parse(contentText);
+      return { success: true, data };
+    } catch (e: any) {
+      return { success: false, error: e.message };
+    }
   }
 }
