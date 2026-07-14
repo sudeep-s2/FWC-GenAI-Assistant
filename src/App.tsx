@@ -4,6 +4,7 @@ import CommandCenter from './components/dashboard/CommandCenter';
 import { orchestrator } from './hooks/useAI';
 import ThemeToggle from './components/shared/ThemeToggle';
 import OnboardingGuide from './components/shared/OnboardingGuide';
+import AccessibilityControlPanel from './components/shared/AccessibilityControlPanel';
 
 // Lazy load other panels for better performance and lazy suspense testing
 const CrowdPulse = lazy(() => import('./components/crowd/CrowdPulse'));
@@ -114,6 +115,9 @@ function App() {
 
       {/* Onboarding Guide Dialog */}
       <OnboardingGuide />
+
+      {/* Accessibility Control Panel */}
+      <AccessibilityControlPanel />
     </div>
   );
 }

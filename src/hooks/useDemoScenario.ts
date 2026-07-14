@@ -8,6 +8,7 @@ interface UseDemoScenarioResult {
   response: AIResponse | null;
   elapsedMs: number | null;
   triggerScenario: (scenario: StadiumScenario, phase?: MatchPhase) => Promise<void>;
+  triggerCustomQuery: (query: string, phase?: MatchPhase) => Promise<void>;
   clearScenario: () => void;
 }
 
@@ -38,6 +39,18 @@ export function useDemoScenario(): UseDemoScenarioResult {
     await processQuery(prompt, phase);
   }, [processQuery]);
 
+  const triggerCustomQuery = useCallback(async (query: string, phase?: MatchPhase) => {
+    setActiveScenario({
+      id: 'custom-query',
+      title: 'Digital Twin Query',
+      description: query,
+      type: 'surge',
+      severity: 'medium',
+      parameters: {}
+    });
+    await processQuery(query, phase);
+  }, [processQuery]);
+
   const clearScenario = useCallback(() => {
     setActiveScenario(null);
     reset();
@@ -49,6 +62,8 @@ export function useDemoScenario(): UseDemoScenarioResult {
     response,
     elapsedMs,
     triggerScenario,
+    triggerCustomQuery,
     clearScenario
   };
 }
+

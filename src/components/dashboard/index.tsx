@@ -17,12 +17,14 @@ import StatusBadge from '../shared/StatusBadge';
 import LoadingState from '../shared/LoadingState';
 import AIResponseCard from '../shared/AIResponseCard';
 import AIStatusPanel from '../shared/AIStatusPanel';
+import InteractiveStadiumMap from '../shared/InteractiveStadiumMap';
+import IncidentTimeline from '../shared/IncidentTimeline';
 
 const CommandCenter: React.FC = () => {
   const { currentPhase, phaseInfo, setPhase, phases } = useMatchPhase();
   const { currentPersona, personaInfo, setPersona, personas } = usePersona();
   const { attendance, volunteersCount, gateData, crowdData } = useStadiumMetrics();
-  const { activeScenario, loading, response, elapsedMs, triggerScenario } = useDemoScenario();
+  const { activeScenario, loading, response, elapsedMs, triggerScenario, triggerCustomQuery } = useDemoScenario();
 
   return (
     <div className="space-y-6">
@@ -79,6 +81,12 @@ const CommandCenter: React.FC = () => {
         />
       </div>
 
+      {/* Interactive Stadium Map */}
+      <InteractiveStadiumMap
+        onConsultAI={(query) => triggerCustomQuery(query, currentPhase)}
+        isLoading={loading}
+      />
+
       {/* Charts / Telemetry Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <CrowdWidget crowdData={crowdData} />
@@ -87,8 +95,9 @@ const CommandCenter: React.FC = () => {
 
       {/* Incidents + Status row */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        <div className="lg:col-span-2">
+        <div className="lg:col-span-2 space-y-4">
           <IncidentWidget />
+          <IncidentTimeline activeScenarioId={activeScenario?.id} />
         </div>
         <AIStatusPanel />
       </div>
@@ -97,7 +106,7 @@ const CommandCenter: React.FC = () => {
       <div className="glass-card p-5 border border-ai-500/20 glow-ai">
         <div className="flex items-center gap-2 mb-4">
           <Play size={16} className="text-ai-400" aria-hidden="true" />
-          <h3 className="text-sm font-semibold text-slate-350 uppercase tracking-widest font-display">
+          <h3 className="text-sm font-semibold text-slate-355 uppercase tracking-widest font-display">
             FIFA 2026 Simulation Operations Twin
           </h3>
         </div>
@@ -120,7 +129,7 @@ const CommandCenter: React.FC = () => {
               <span className="text-xl mb-1 block" aria-hidden="true">
                 {scenario.type === 'surge' ? '🚨' : scenario.type === 'lost-fan' ? '🧭' : scenario.type === 'accessibility' ? '♿' : scenario.type === 'maintenance' ? '🔧' : '♻️'}
               </span>
-              <p className="text-xs font-bold text-slate-300 leading-tight">{scenario.title}</p>
+              <p className="text-xs font-bold text-slate-305 leading-tight">{scenario.title}</p>
               <div className="mt-1.5">
                 <StatusBadge status={scenario.severity} />
               </div>

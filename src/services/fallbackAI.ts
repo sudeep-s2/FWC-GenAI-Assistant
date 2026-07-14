@@ -1,9 +1,165 @@
-import type { AIResponse } from '../types';
+import type { AIResponse, KnowledgeDocument, MatchPhase, Persona } from '../types';
 
 export class FallbackAI {
   async handleFailure(error: Error): Promise<AIResponse> {
     console.warn('FallbackAI: Gemini API failed, using fallback logic. Error details:', error.message);
     return this.getGeneralFallback();
+  }
+
+  synthesizeResponseFromRAG(
+    query: string,
+    documents: KnowledgeDocument[],
+    matchPhase?: MatchPhase,
+    activePersona?: Persona
+  ): AIResponse {
+    const offlineHeader = "[Offline Stadium Intelligence Active] ";
+    
+    if (documents.length === 0) {
+      return this.getGeneralFallback();
+    }
+
+    const queryLower = query.toLowerCase();
+    const queryWords = queryLower.split(/\s+/).filter(w => w.length > 2);
+
+    // Score and rank documents
+    const scoredDocs = documents.map(doc => {
+      let score = 0;
+
+      // 1. Keyword matches (+1 per match in title, +1 in content)
+      queryWords.forEach(word => {
+        if (doc.title.toLowerCase().includes(word)) score += 1;
+        if (doc.content.toLowerCase().includes(word)) score += 1;
+      });
+
+      // 2. Tag overlap (+2 per matching tag)
+      doc.tags.forEach(tag => {
+        if (queryLower.includes(tag.toLowerCase())) {
+          score += 2;
+        }
+      });
+
+      // 3. Scenario type / Category match
+      const docCategoryLower = doc.category.toLowerCase();
+      if (queryLower.includes('wheelchair') || queryLower.includes('ada') || activePersona === 'Accessibility Guest') {
+        if (docCategoryLower.includes('accessibility')) score += 5;
+      }
+      if (queryLower.includes('volunteer') || activePersona === 'Volunteer') {
+        if (docCategoryLower.includes('volunteer') || docCategoryLower.includes('logistics')) score += 5;
+      }
+      if (queryLower.includes('crowd') || queryLower.includes('surge') || queryLower.includes('density') || activePersona === 'Organizer') {
+        if (docCategoryLower.includes('crowd') || docCategoryLower.includes('gate')) score += 5;
+      }
+      if (queryLower.includes('emergency') || queryLower.includes('incident') || queryLower.includes('hazard')) {
+        if (docCategoryLower.includes('emergency') || docCategoryLower.includes('safety')) score += 5;
+      }
+
+      // 4. Location match (+4 if location name mentioned in query overlaps with doc section/content/tags)
+      const locations = ['gate a', 'gate b', 'gate g', 'gate f', 'gate h', 'sector a', 'sector b', 'sector c', 'sector d', 'elevator 3', 'elevator 4', 'lot p4', 'concourse', 'food court'];
+      locations.forEach(loc => {
+        if (queryLower.includes(loc)) {
+          if (doc.content.toLowerCase().includes(loc) || doc.section.toLowerCase().includes(loc) || doc.title.toLowerCase().includes(loc)) {
+            score += 4;
+          }
+        }
+      });
+
+      // 5. Severity/Priority boost
+      if (doc.priority === 'critical') score += 4;
+      else if (doc.priority === 'high') score += 3;
+      else if (doc.priority === 'medium') score += 2;
+      else if (doc.priority === 'low') score += 1;
+
+      return { doc, score };
+    });
+
+    // Sort documents descending by score
+    scoredDocs.sort((a, b) => b.score - a.score);
+    const topScored = scoredDocs.slice(0, 3); // Take top 3 documents
+    const sortedDocs = topScored.map(sd => sd.doc);
+
+    // Determine highest priority among documents
+    let maxPriority: 'low' | 'medium' | 'high' | 'critical' = 'low';
+    const prioritiesOrder = { low: 0, medium: 1, high: 2, critical: 3 };
+    for (const doc of sortedDocs) {
+      if (prioritiesOrder[doc.priority] > prioritiesOrder[maxPriority]) {
+        maxPriority = doc.priority;
+      }
+    }
+
+    // Synthesize content response
+    const documentTitles = sortedDocs.map(d => d.title).join(', ');
+    const contentIntro = `Based on offline stadium database records for: ${documentTitles} (Relevance Ranked).`;
+    const details = sortedDocs.map(d => `- [${d.section}] ${d.content}`).join('\n');
+    const content = `${offlineHeader}${contentIntro}\n\nKey Guidelines:\n${details}\n\nPlease proceed with standard operating procedures under the current match phase (${matchPhase || 'PRE_MATCH'}) and active persona (${activePersona || 'Organizer'}) view.`;
+
+    // Construct actions based on document content/tags
+    const actions: string[] = [];
+    sortedDocs.forEach(doc => {
+      if (doc.tags.includes('crowd') || doc.tags.includes('surge') || doc.tags.includes('buffering')) {
+        actions.push(`[Crowd Control] Deploy barriers and restrict entry lanes near ${doc.section}.`);
+      }
+      if (doc.tags.includes('ada') || doc.tags.includes('accessibility') || doc.tags.includes('wheelchair')) {
+        actions.push(`[Accessibility] Clear priority paths and deploy wheelchair shuttle guides to ${doc.section}.`);
+      }
+      if (doc.tags.includes('volunteer') || doc.tags.includes('volunteers')) {
+        actions.push(`[Volunteer Logistics] Coordinate usher shifts and radio updates via ${doc.section} command.`);
+      }
+      if (doc.tags.includes('emergency') || doc.tags.includes('medical') || doc.tags.includes('hazard')) {
+        actions.push(`[Emergency SOP] Deploy first-aid kits/cleaners to ${doc.section} and divert pedestrian streams.`);
+      }
+    });
+
+    if (actions.length === 0) {
+      actions.push("Check stadium sector assignment logs.", "Consult supervisor on Radio Channel 1.");
+    }
+    const uniqueActions = Array.from(new Set(actions)).slice(0, 4);
+
+    // Collect all factors considered
+    const factors = new Set<string>();
+    factors.add(`Match phase: ${matchPhase || 'PRE_MATCH'}`);
+    factors.add(`Active Persona: ${activePersona || 'Organizer'}`);
+    sortedDocs.forEach(doc => {
+      doc.tags.forEach(t => factors.add(`SOP Tag: ${t}`));
+    });
+
+    // citations mapping
+    const citations = sortedDocs.map(doc => {
+      const getSourceFile = (category: string): string => {
+        switch (category.toLowerCase()) {
+          case 'accessibility': return 'accessibility_rules.json';
+          case 'volunteer logistics': return 'volunteer_manual.json';
+          case 'emergency protocols': return 'emergency_protocols.json';
+          default: return 'stadium_sop.json';
+        }
+      };
+      return {
+        source: getSourceFile(doc.category),
+        section: doc.section,
+        id: doc.id
+      };
+    });
+
+    // Synthesize tasks
+    const suggestedTasks = sortedDocs.map(doc => ({
+      roleRequired: doc.category.toLowerCase().includes('volunteer') ? 'Usher' : 'Guest Ambassador',
+      assignedCount: doc.priority === 'critical' || doc.priority === 'high' ? 3 : 1,
+      location: doc.section,
+      description: `Address guidelines for ${doc.title}.`
+    }));
+
+    return {
+      content,
+      source: 'OFFLINE_INTELLIGENCE',
+      confidence: maxPriority === 'critical' || maxPriority === 'high' ? 'high' : 'medium',
+      citations,
+      actions: uniqueActions,
+      factorsConsidered: Array.from(factors),
+      metadata: {
+        priority: maxPriority,
+        suggestedTasks,
+        requiredToolCalls: []
+      }
+    };
   }
 
   getScenarioFallback(scenarioId: string): AIResponse {

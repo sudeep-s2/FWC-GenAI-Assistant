@@ -244,3 +244,92 @@ body {
 .fade-slide-in {
   animation: fadeSlideIn 0.35s ease-out forwards;
 }
+
+/* --- Accessibility Adjustments --- */
+
+/* Dyslexia-Friendly Font Class */
+.font-dyslexia, .font-dyslexia * {
+  font-family: 'Comic Sans MS', 'Dyslexie', 'Inter', sans-serif !important;
+  letter-spacing: 0.05em !important;
+  word-spacing: 0.1em !important;
+  line-height: 1.6 !important;
+}
+
+/* Font Size Scales */
+html.text-size-sm {
+  font-size: 14px !important;
+}
+html.text-size-md {
+  font-size: 16px !important;
+}
+html.text-size-lg {
+  font-size: 18px !important;
+}
+html.text-size-xl {
+  font-size: 20px !important;
+}
+
+/* High Contrast Mode */
+html.high-contrast {
+  --stadium-bg: #000000 !important;
+  --stadium-text: #ffffff !important;
+  --stadium-card-bg: #000000 !important;
+  --stadium-card-border: #ffffff !important;
+  --stadium-card-glow: none !important;
+}
+html.high-contrast body,
+html.high-contrast header,
+html.high-contrast main,
+html.high-contrast div,
+html.high-contrast section,
+html.high-contrast nav,
+html.high-contrast footer {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+  border-color: #ffffff !important;
+  box-shadow: none !important;
+}
+html.high-contrast button,
+html.high-contrast select,
+html.high-contrast input,
+html.high-contrast textarea {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+  border-color: #ffffff !important;
+  border-width: 2px !important;
+  box-shadow: none !important;
+}
+html.high-contrast button:hover,
+html.high-contrast select:hover {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+}
+html.high-contrast button:focus-visible,
+html.high-contrast select:focus-visible,
+html.high-contrast input:focus-visible,
+html.high-contrast textarea:focus-visible {
+  outline: 3px solid #ffff00 !important;
+  outline-offset: 3px !important;
+}
+html.high-contrast .text-gradient-gold,
+html.high-contrast .text-gradient-ai,
+html.high-contrast .bg-gradient-to-r,
+html.high-contrast .bg-gradient-to-tr {
+  background: none !important;
+  background-color: #000000 !important;
+  color: #ffff00 !important;
+  -webkit-text-fill-color: #ffff00 !important;
+}
+
+/* Reduced Motion Mode */
+html.reduce-motion,
+html.reduce-motion * {
+  animation-delay: -1ms !important;
+  animation-duration: 1ms !important;
+  animation-iteration-count: 1 !important;
+  background-attachment: scroll !important;
+  scroll-behavior: auto !important;
+  transition-duration: 0s !important;
+  transition-delay: 0s !important;
+}
+

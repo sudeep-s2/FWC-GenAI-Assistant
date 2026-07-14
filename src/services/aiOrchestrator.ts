@@ -93,7 +93,7 @@ export class AIOrchestrator {
     if (!allowedByRateLimit) {
       console.warn('AIOrchestrator: Rate limit exceeded. Triggering Fallback.');
       this.cache.incrementMetric('fallbackActivations');
-      return this.getFallbackResponseForIntent(intent, new Error('Rate limit exceeded (30 calls per session)'), matchPhase, activePersona);
+      return this.getFallbackResponseForIntent(intent, new Error('Rate limit exceeded (30 calls per session)'), matchPhase, activePersona, sanitized, ragResult.documents);
     }
 
     // 6. Gemini API Request
@@ -209,10 +209,27 @@ CRITICAL: Do NOT wrap the JSON response in markdown code blocks like \`\`\`json 
     console.warn('AIOrchestrator: Gemini request failed or response validation failed. Falling back to local offline intelligence.');
     this.cache.incrementMetric('fallbackActivations');
     const apiError = new Error(geminiResult.error || 'Response validation failed');
-    return this.getFallbackResponseForIntent(intent, apiError, matchPhase, activePersona);
+    return this.getFallbackResponseForIntent(intent, apiError, matchPhase, activePersona, sanitized, ragResult.documents);
   }
 
-  private getFallbackResponseForIntent(intent: string, error: Error, matchPhase?: MatchPhase, activePersona?: Persona): AIResponse {
+  private getFallbackResponseForIntent(
+    intent: string,
+    error: Error,
+    matchPhase?: MatchPhase,
+    activePersona?: Persona,
+    query?: string,
+    documents?: import('../types').KnowledgeDocument[]
+  ): AIResponse {
+    // If we have documents and a query, and it is NOT a simulation scenario, perform dynamic RAG-based offline synthesis
+    if (documents && documents.length > 0 && query && !query.includes('[FIFA 2026 Simulation]')) {
+      const fallbackResponse = this.fallbackAI.synthesizeResponseFromRAG(query, documents, matchPhase, activePersona);
+      fallbackResponse.metadata = {
+        ...fallbackResponse.metadata,
+        triggerError: error.message
+      };
+      return fallbackResponse;
+    }
+
     let scenarioId = 'general';
     if (intent === 'predictive') scenarioId = 'scen-predictive-risk';
     else if (intent === 'surge') scenarioId = 'scen-surge-emergency';
