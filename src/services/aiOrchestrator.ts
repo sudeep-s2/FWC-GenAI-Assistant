@@ -139,7 +139,7 @@ ${personaInstructions}
 You must return a structured JSON response matching the following schema.
 CRITICAL: Do NOT wrap the JSON response in markdown code blocks like \`\`\`json or \`\`\`. Output raw JSON text only.
 {
-  "content": "detailed operational recommendation and advice tailored to FIFA regulations",
+  "content": "detailed operational recommendation. You MUST format this string to strictly follow this structure: ### Situation\\n[situation description]\\n\\n### Risk Level\\n[Low/Medium/High/Critical]\\n\\n### Root Cause\\n[root cause]\\n\\n### Recommended Actions\\n[actions]\\n\\n### Required Personnel\\n[required roles]\\n\\n### Expected Impact\\n[mitigation targets]\\n\\n### Confidence\\n[Low/Medium/High]\\n\\n### Evidence\\n[citations or sensor log references]",
   "confidence": "high" | "medium" | "low",
   "actions": ["suggested action step 1", "suggested action step 2"],
   "factorsConsidered": ["✓ Match phase", "✓ Crowd density", "✓ Stadium SOP", "✓ Transport status", "✓ Accessibility requirements"],
@@ -160,61 +160,65 @@ CRITICAL: Do NOT wrap the JSON response in markdown code blocks like \`\`\`json 
 
     const prompt = `User Query: ${sanitized}`;
 
-    let geminiResult = await this.geminiService.generateStructuredResponse<Omit<AIResponse, 'source' | 'citations'>>(
-      prompt,
-      systemInstruction
-    );
+    // Define configured AI providers list (Layer 1 & Layer 2)
+    interface AIProvider {
+      name: 'GEMINI' | 'OPENAI' | 'GROQ';
+      apiKey: string | undefined;
+      callFn: (p: string, s: string) => Promise<{ success: boolean; data?: any; error?: string }>;
+    }
+
+    const providers: AIProvider[] = [
+      {
+        name: 'GEMINI',
+        apiKey: import.meta.env.VITE_GEMINI_API_KEY || 'has_default',
+        callFn: async (p, s) => {
+          let res = await this.geminiService.generateStructuredResponse<Omit<AIResponse, 'source' | 'citations'>>(p, s);
+          if (!res.success) {
+            const backupKey = import.meta.env.VITE_BACKUP_GEMINI_API_KEY;
+            if (backupKey) {
+              console.warn('[Failover Engine] Primary Gemini key failed. Swapping credentials and retrying.');
+              this.geminiService.setApiKey(backupKey);
+              res = await this.geminiService.generateStructuredResponse<Omit<AIResponse, 'source' | 'citations'>>(p, s);
+            }
+          }
+          return res;
+        }
+      },
+      {
+        name: 'OPENAI',
+        apiKey: import.meta.env.VITE_OPENAI_API_KEY,
+        callFn: async (p, s) => {
+          console.warn('[Failover Engine] Swapping provider to OpenAI...');
+          return this.fetchOpenAI(p, s, import.meta.env.VITE_OPENAI_API_KEY || '');
+        }
+      },
+      {
+        name: 'GROQ',
+        apiKey: import.meta.env.VITE_GROQ_API_KEY,
+        callFn: async (p, s) => {
+          console.warn('[Failover Engine] Swapping provider to Groq...');
+          return this.fetchGroq(p, s, import.meta.env.VITE_GROQ_API_KEY || '');
+        }
+      }
+    ];
 
     let apiData: Omit<AIResponse, 'source' | 'citations'> | null = null;
     let finalSource: 'GEMINI' | 'OPENAI' | 'GROQ' = 'GEMINI';
-    let errorMessage = geminiResult.error || 'Response validation failed';
+    let errorMessage = 'All providers failed.';
 
-    if (geminiResult.success && geminiResult.data) {
-      apiData = geminiResult.data;
-    } else {
-      // Try backup Gemini Key if available
-      const backupKey = import.meta.env.VITE_BACKUP_GEMINI_API_KEY;
-      if (backupKey) {
-        console.warn('[Failover Engine] Primary Gemini key failed. Swapping credentials and retrying.');
-        this.geminiService.setApiKey(backupKey);
-        const retryResult = await this.geminiService.generateStructuredResponse<Omit<AIResponse, 'source' | 'citations'>>(
-          prompt,
-          systemInstruction
-        );
-        if (retryResult.success && retryResult.data) {
-          apiData = retryResult.data;
-        } else {
-          errorMessage = retryResult.error || errorMessage;
-        }
-      }
-
-      // Try OpenAI if still failed
-      if (!apiData) {
-        const openaiKey = import.meta.env.VITE_OPENAI_API_KEY;
-        if (openaiKey) {
-          console.warn('[Failover Engine] Primary/Backup Gemini keys failed. Initiating failover to OpenAI...');
-          const openaiResult = await this.fetchOpenAI(prompt, systemInstruction, openaiKey);
-          if (openaiResult.success && openaiResult.data) {
-            apiData = openaiResult.data;
-            finalSource = 'OPENAI';
+    for (const provider of providers) {
+      if (provider.apiKey) {
+        try {
+          const result = await provider.callFn(prompt, systemInstruction);
+          if (result.success && result.data) {
+            apiData = result.data;
+            finalSource = provider.name;
+            break;
           } else {
-            errorMessage = openaiResult.error || errorMessage;
+            errorMessage += ` [${provider.name}: ${result.error || 'Validation error'}]`;
           }
-        }
-      }
-
-      // Try Groq if still failed
-      if (!apiData) {
-        const groqKey = import.meta.env.VITE_GROQ_API_KEY;
-        if (groqKey) {
-          console.warn('[Failover Engine] Gemini and OpenAI keys failed. Initiating failover to Groq...');
-          const groqResult = await this.fetchGroq(prompt, systemInstruction, groqKey);
-          if (groqResult.success && groqResult.data) {
-            apiData = groqResult.data;
-            finalSource = 'GROQ';
-          } else {
-            errorMessage = groqResult.error || errorMessage;
-          }
+        } catch (e: any) {
+          errorMessage += ` [${provider.name} error: ${e.message}]`;
         }
       }
     }

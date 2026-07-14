@@ -19,6 +19,7 @@ import AIResponseCard from '../shared/AIResponseCard';
 import AIStatusPanel from '../shared/AIStatusPanel';
 import InteractiveStadiumMap from '../shared/InteractiveStadiumMap';
 import IncidentTimeline from '../shared/IncidentTimeline';
+import WhatIfSimulator from './WhatIfSimulator';
 
 const CommandCenter: React.FC = () => {
   const { currentPhase, phaseInfo, setPhase, phases } = useMatchPhase();
@@ -99,7 +100,15 @@ const CommandCenter: React.FC = () => {
           <IncidentWidget />
           <IncidentTimeline activeScenarioId={activeScenario?.id} />
         </div>
-        <AIStatusPanel />
+        <div className="space-y-4">
+          <WhatIfSimulator
+            onRunSimulation={(query) => triggerCustomQuery(query, currentPhase)}
+            loading={loading}
+            response={response}
+            elapsedMs={elapsedMs}
+          />
+          <AIStatusPanel />
+        </div>
       </div>
 
       {/* Judge Demo Console */}
@@ -143,7 +152,7 @@ const CommandCenter: React.FC = () => {
         )}
 
         {/* Response display */}
-        {response && !loading && (
+        {response && !loading && !response.content.includes('[What-If Simulation]') && (
           <div className="space-y-4">
             <AIResponseCard response={response} elapsedMs={elapsedMs} ragEnabled />
             

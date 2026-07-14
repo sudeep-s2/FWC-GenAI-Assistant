@@ -168,7 +168,29 @@ export class FallbackAI {
     switch (scenarioId) {
       case 'scen-predictive-risk':
         return {
-          content: `${offlineHeader}FIFA 2026 Matchday Operations Twin 30-minute crowd prediction indicates high-density load propagation at Gate G Outer Perimeter. Gate G ticket scanners will exceed safe load capacity in approximately 25 minutes. Recommended to throttle scanners to 60% and redirect arrival streams to auxiliary gates.`,
+          content: `${offlineHeader}### Situation
+Crowd predictions indicate high-density load propagation at Gate G Outer Perimeter.
+
+### Risk Level
+HIGH
+
+### Root Cause
+Arrival velocity from Light Rail drops off every 3 minutes.
+
+### Recommended Actions
+Throttle scanners to 60% capacity and redirect arrival streams to auxiliary gates.
+
+### Required Personnel
+4 Ushers and Transit drop-off coordinators.
+
+### Expected Impact
+Safe load pacing at Gate G ticket scanners.
+
+### Confidence
+HIGH
+
+### Evidence
+Grounding database SOP-01 (Crowd Surge prevention).`,
           source: 'OFFLINE_INTELLIGENCE',
           confidence: 'high',
           citations: [
@@ -213,7 +235,29 @@ export class FallbackAI {
 
       case 'scen-surge-emergency':
         return {
-          content: `${offlineHeader}Immediate FIFA Matchday crowd buffering protocol required at Gate G Outer Perimeter. Gate G ticket scanners should be throttled to 50% capacity. Open auxiliary Gate F and Gate H to absorb redirected fans.`,
+          content: `${offlineHeader}### Situation
+Immediate crowd surge and buffering load threshold reached at Gate G Outer Perimeter.
+
+### Risk Level
+CRITICAL
+
+### Root Cause
+Gate G scanners exceeding queue limits under peak spectator load.
+
+### Recommended Actions
+Throttle scanners to 50% capacity, open Gate F and Gate H immediately, and set detour signage at Transit Drop-off.
+
+### Required Personnel
+6 Ushers at Gate G and 4 Guest Ambassadors at Transit Center Crossing.
+
+### Expected Impact
+Redirection of arrival waves to under-capacity gates to diffuse local queue pressure.
+
+### Confidence
+HIGH
+
+### Evidence
+Grounding database SOP-01 (Crowd Control double-door guidelines).`,
           source: 'OFFLINE_INTELLIGENCE',
           confidence: 'high',
           citations: [
@@ -260,7 +304,29 @@ export class FallbackAI {
 
       case 'scen-lost-fan':
         return {
-          content: `${offlineHeader}Provide Japanese translation support and escort spectator to Section 112 (near Sector B, Row 12, Seat 4). Check ticket details using the hand-held scanner.`,
+          content: `${offlineHeader}### Situation
+Japanese-speaking spectator requires guidance to their ticketed seat in Section 112.
+
+### Risk Level
+LOW
+
+### Root Cause
+Language barrier and crowd density in Sector B.
+
+### Recommended Actions
+Provide Japanese translation support, verify ticket credentials using the handheld scanner, and escort spectator to Section 112 (near Sector B, Row 12, Seat 4).
+
+### Required Personnel
+1 Guest Ambassador (Japanese-speaking).
+
+### Expected Impact
+Fan reassurance and prompt seat location.
+
+### Confidence
+HIGH
+
+### Evidence
+FIFA Volunteer Manual VOL-05 (Multilingual Assistance).`,
           source: 'OFFLINE_INTELLIGENCE',
           confidence: 'high',
           citations: [
@@ -292,7 +358,29 @@ export class FallbackAI {
 
       case 'scen-accessibility-request':
         return {
-          content: `${offlineHeader}Dispatch a golf cart shuttle to transport the visitor from the Light Rail Station ADA gate to Sector C. Route them via ADA Elevator 4 to access Sector C Section 104 companion platforms.`,
+          content: `${offlineHeader}### Situation
+Elderly visitor requires transport from Light Rail Station ADA gate to companion platform.
+
+### Risk Level
+MEDIUM
+
+### Root Cause
+Mobility constraints and high queue loads at elevator lobbies.
+
+### Recommended Actions
+Dispatch a golf cart shuttle to transport the visitor from the Light Rail Station ADA gate to Sector C. Route them via ADA Elevator 4 to access Sector C Section 104 platform.
+
+### Required Personnel
+1 Guest Ambassador (shuttle driver) and 1 Elevator Lobby Usher.
+
+### Expected Impact
+Safe and ADA-compliant transit routing to companion platform.
+
+### Confidence
+HIGH
+
+### Evidence
+FIFA Accessibility Rules ACC-01 (Wheelchair transport) and ACC-03 (Elevator access).`,
           source: 'OFFLINE_INTELLIGENCE',
           confidence: 'high',
           citations: [
@@ -336,7 +424,29 @@ export class FallbackAI {
 
       case 'scen-maintenance-incident':
         return {
-          content: `${offlineHeader}Deploy a clean-up team to Sector C Concourse Corridor C-3 immediately to clear the water spill and install 'Wet Floor' caution signs. Redirect wheelchair traffic away from Corridor C-3.`,
+          content: `${offlineHeader}### Situation
+Water spill reported on Concourse Corridor C-3.
+
+### Risk Level
+HIGH
+
+### Root Cause
+Physical spill hazard blocking general and wheelchair access paths.
+
+### Recommended Actions
+Deploy facilities clean-up crew with wet vacs, install warning signs, and redirect wheelchair traffic to the parallel ramp bypass.
+
+### Required Personnel
+2 Concourse Corridor Ushers and 1 Maintenance Clean-up team.
+
+### Expected Impact
+Spill containment, prevention of slip-and-fall incidents, and maintaining ADA-compliant pathways.
+
+### Confidence
+HIGH
+
+### Evidence
+FIFA Emergency Protocols EM-02 (Blocked Exit/Corridors).`,
           source: 'OFFLINE_INTELLIGENCE',
           confidence: 'high',
           citations: [
@@ -374,7 +484,29 @@ export class FallbackAI {
 
       case 'scen-sustainability-optimization':
         return {
-          content: `${offlineHeader}Deploy additional volunteers at Food Court 3 to act as recycling monitors and explain proper disposal rules. Conduct a brief swap of garbage bins for dual-sorting bins.`,
+          content: `${offlineHeader}### Situation
+High contamination rate detected in Food Court 3 waste bins.
+
+### Risk Level
+MEDIUM
+
+### Root Cause
+Lack of clear sorting signs and high post-match crowd density in dining area.
+
+### Recommended Actions
+Deploy additional zero-waste volunteers at Food Court 3 to act as recycling monitors and explain proper disposal rules. Swap garbage bins for dual-sorting bins.
+
+### Required Personnel
+2 Guest Ambassadors (Waste Monitors).
+
+### Expected Impact
+Reduced waste contamination rates and increased zero-waste recovery.
+
+### Confidence
+HIGH
+
+### Evidence
+Volunteer Manual Section VOL-01 (Zero-waste coordination).`,
           source: 'OFFLINE_INTELLIGENCE',
           confidence: 'high',
           citations: [
@@ -424,7 +556,29 @@ export class FallbackAI {
 
     if (queryLower.includes('medical') || queryLower.includes('injury') || queryLower.includes('hurt') || queryLower.includes('ems')) {
       priority = 'critical';
-      content = `${header}Deterministic Emergency Protocol: Medical Standby active. Route patient immediately to Sector A First Aid (Level 1, Room 14), Sector B First Aid (Level 2, Room 32), or Sector D First Aid (Level 1, Room 8). Reserve Elevator 3/4 lobbies for EMS transport and clear spectator paths.`;
+      content = `### Situation
+${header}Active medical incident or spectator injury reported inside the stadium perimeter.
+
+### Risk Level
+CRITICAL
+
+### Root Cause
+Spectator trauma, heat exhaustion, or acute medical emergency.
+
+### Recommended Actions
+Route patient immediately to Sector A First Aid (Level 1, Room 14), Sector B First Aid (Level 2, Room 32), or Sector D First Aid (Level 1, Room 8). Reserve Elevator 3/4 lobbies for EMS transport and clear spectator paths.
+
+### Required Personnel
+EMS Crew, Security Team, and nearest Sector Ushers.
+
+### Expected Impact
+Expedited response, patient stabilization, and clearance of emergency access corridors.
+
+### Confidence
+HIGH (Deterministic safety guidelines)
+
+### Evidence
+Local Stadium Safety SOP Section 5 (Medical Standby protocols).`;
       actions = [
         "Notify Sector Command on Radio Channel 3.",
         "Dispatch nearest Mobile EMS Cart to location.",
@@ -433,7 +587,29 @@ export class FallbackAI {
       ];
     } else if (queryLower.includes('evac') || queryLower.includes('fire') || queryLower.includes('alarm')) {
       priority = 'critical';
-      content = `${header}Deterministic Evacuation Protocol: Level 3 Egress active. All gate turnstiles are configured to free-wheel egress. Direct Sectors A/B to Muster Point North (Zone 1); direct Sectors C/D to Muster Point South (Zone 2). Elevators are reserved exclusively for wheelchair/mobility guests.`;
+      content = `### Situation
+${header}Emergency evacuation trigger or active safety alarm.
+
+### Risk Level
+CRITICAL
+
+### Root Cause
+Evacuation alarm trigger or perimeter hazard.
+
+### Recommended Actions
+Level 3 Egress active. All gate turnstiles configured to free-wheel egress. Direct Sectors A/B to Muster Point North (Zone 1); direct Sectors C/D to Muster Point South (Zone 2). Elevators are reserved exclusively for wheelchair/mobility guests.
+
+### Required Personnel
+Fire Wardens, Security Detail, and all mobilized Volunteer Ushers.
+
+### Expected Impact
+Safe and orderly spectator egress to designated safe muster sectors.
+
+### Confidence
+HIGH (Deterministic safety guidelines)
+
+### Evidence
+FIFA Stadium SOP Section 12 (Emergency Evacuation & Egress).`;
       actions = [
         "Manually open all emergency double-doors.",
         "Guide spectators to assigned Muster Points using flags.",
@@ -442,7 +618,29 @@ export class FallbackAI {
       ];
     } else if (queryLower.includes('spill') || queryLower.includes('leak') || queryLower.includes('debris') || queryLower.includes('hazard')) {
       priority = 'high';
-      content = `${header}Deterministic Maintenance Protocol: Spill Hazard flagged. Clean up area and place 'Wet Floor' caution signs. If exit ramps or corridors are blocked, ushers must cross arms to signal detour and direct wheelchair traffic via the parallel ramp bypass.`;
+      content = `### Situation
+${header}Slip or facility hazard reported in active concourse zone.
+
+### Risk Level
+HIGH
+
+### Root Cause
+Liquid spill, physical debris, or facility structural blockage.
+
+### Recommended Actions
+Clean up area and place 'Wet Floor' caution signs. If exit ramps or corridors are blocked, ushers must cross arms to signal detour and direct wheelchair traffic via the parallel ramp bypass.
+
+### Required Personnel
+Facilities Cleaning Crew, Maintenance staff, and nearby Ushers.
+
+### Expected Impact
+Hazard isolation, prevention of slip-and-fall incidents, and maintaining ADA-compliant access.
+
+### Confidence
+HIGH (Deterministic safety guidelines)
+
+### Evidence
+Local Facility Maintenance SOP Section 8 (Spill containment and detours).`;
       actions = [
         "Dispatch facilities maintenance crew with wet vacs.",
         "Place warning cones 10 meters before the hazard.",
@@ -451,7 +649,29 @@ export class FallbackAI {
       ];
     } else if (queryLower.includes('lost') || queryLower.includes('minor') || queryLower.includes('child')) {
       priority = 'medium';
-      content = `${header}Deterministic Fan Support Protocol: Spectator Assistance required. Escort lost fans or unaccompanied minors to central resolution desks: North Plaza (Desk 1) or South Plaza (Desk 2). Verify ticket barcodes with backup handheld scanners.`;
+      content = `### Situation
+${header}Lost fan or unaccompanied minor reported.
+
+### Risk Level
+MEDIUM
+
+### Root Cause
+Spectator separation in high-density crowd sections.
+
+### Recommended Actions
+Escort lost fans or unaccompanied minors to central resolution desks: North Plaza (Desk 1) or South Plaza (Desk 2). Verify ticket barcodes with backup handheld scanners.
+
+### Required Personnel
+Guest Services Ambassador, Security supervisor, and Volunteer guides.
+
+### Expected Impact
+Reunification of separated parties and guest assurance support.
+
+### Confidence
+HIGH (Deterministic safety guidelines)
+
+### Evidence
+Volunteer Manual Section VOL-03 (Guest Relations & Lost Persons).`;
       actions = [
         "Escort spectator safely to closest Plaza Info Desk.",
         "Verify credentials and log incident in Guest Services database.",
@@ -460,7 +680,29 @@ export class FallbackAI {
       ];
     } else {
       priority = 'low';
-      content = `${header}Deterministic Operations Protocol: Standard advisory active. Ensure volunteers are staffed at active gates, perimeter checkpoints are clear, and backup handheld scanning devices are charged and ready.`;
+      content = `### Situation
+${header}General inquiry or standard fallback operational query.
+
+### Risk Level
+LOW
+
+### Root Cause
+No matching high-priority emergency or maintenance keywords detected.
+
+### Recommended Actions
+Monitor crowd density, check volunteer schedules, and ensure active gates maintain standard pacing. Ensure backup handheld scanners are charged and operational.
+
+### Required Personnel
+Default sector staff, gate ushers, and volunteer coordinates.
+
+### Expected Impact
+Maintaining standard matchday operations baseline indicators.
+
+### Confidence
+MEDIUM
+
+### Evidence
+Local Operations Database - General SOP Guidelines.`;
       actions = [
         "Conduct sector radio communication check on Channel 1.",
         "Inspect volunteer shift rosters for current match phase.",
@@ -493,7 +735,31 @@ export class FallbackAI {
 
   private getGeneralFallback(): AIResponse {
     return {
-      content: "[Offline Stadium Intelligence Active] System operational in standard fallback mode. Monitor crowd density, volunteer shifts, and incident queues via the operator dashboard.",
+      content: `### Situation
+[Offline Stadium Intelligence Active] System is operating in default offline fallback mode.
+
+### Risk Level
+LOW
+
+### Root Cause
+General operations inquiry with no active cloud connection or RAG grounding matches.
+
+### Recommended Actions
+1. Ensure all volunteers are active at designated gate stations.
+2. Conduct hourly sector radio checks.
+3. Verify emergency exit lanes remain clear.
+
+### Required Personnel
+All sector leads, volunteer coordinators, and safety marshals.
+
+### Expected Impact
+Maintaining basic operational oversight and communication baseline.
+
+### Confidence
+MEDIUM
+
+### Evidence
+Default Local Operations SOP manual logs.`,
       source: 'OFFLINE_INTELLIGENCE',
       confidence: 'medium',
       citations: [],

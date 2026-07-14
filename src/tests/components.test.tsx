@@ -109,7 +109,7 @@ describe('CommandCenter Dashboard Component', () => {
     expect(screen.getByText(/Orchestrating RAG context/i)).toBeInTheDocument();
     
     await waitFor(() => {
-      expect(screen.getByText(/Immediate FIFA Matchday crowd buffering protocol/i)).toBeInTheDocument();
+      expect(screen.getByText(/Immediate crowd surge/i)).toBeInTheDocument();
     }, { timeout: 3000 });
   });
 });
