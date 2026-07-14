@@ -409,6 +409,88 @@ export class FallbackAI {
     }
   }
 
+  getDeterministicEmergencyGuidance(
+    query: string,
+    matchPhase?: MatchPhase,
+    activePersona?: Persona
+  ): AIResponse {
+    const header = "[Offline Emergency Rules Mode] ";
+    const queryLower = query.toLowerCase();
+
+    let content = "";
+    let priority: 'low' | 'medium' | 'high' | 'critical' = 'low';
+    let actions: string[] = [];
+    const factors = [`Match Phase: ${matchPhase || 'PRE_MATCH'}`, `Persona View: ${activePersona || 'Organizer'}`, 'Deterministic Safety SOPs'];
+
+    if (queryLower.includes('medical') || queryLower.includes('injury') || queryLower.includes('hurt') || queryLower.includes('ems')) {
+      priority = 'critical';
+      content = `${header}Deterministic Emergency Protocol: Medical Standby active. Route patient immediately to Sector A First Aid (Level 1, Room 14), Sector B First Aid (Level 2, Room 32), or Sector D First Aid (Level 1, Room 8). Reserve Elevator 3/4 lobbies for EMS transport and clear spectator paths.`;
+      actions = [
+        "Notify Sector Command on Radio Channel 3.",
+        "Dispatch nearest Mobile EMS Cart to location.",
+        "Secure Elevator lobbies and restrict passenger traffic.",
+        "Keep patient comfortable; do not move unless in immediate danger."
+      ];
+    } else if (queryLower.includes('evac') || queryLower.includes('fire') || queryLower.includes('alarm')) {
+      priority = 'critical';
+      content = `${header}Deterministic Evacuation Protocol: Level 3 Egress active. All gate turnstiles are configured to free-wheel egress. Direct Sectors A/B to Muster Point North (Zone 1); direct Sectors C/D to Muster Point South (Zone 2). Elevators are reserved exclusively for wheelchair/mobility guests.`;
+      actions = [
+        "Manually open all emergency double-doors.",
+        "Guide spectators to assigned Muster Points using flags.",
+        "Suspend all inbound transit shuttle bus drop-offs.",
+        "Form volunteer guides line at outer perimeters."
+      ];
+    } else if (queryLower.includes('spill') || queryLower.includes('leak') || queryLower.includes('debris') || queryLower.includes('hazard')) {
+      priority = 'high';
+      content = `${header}Deterministic Maintenance Protocol: Spill Hazard flagged. Clean up area and place 'Wet Floor' caution signs. If exit ramps or corridors are blocked, ushers must cross arms to signal detour and direct wheelchair traffic via the parallel ramp bypass.`;
+      actions = [
+        "Dispatch facilities maintenance crew with wet vacs.",
+        "Place warning cones 10 meters before the hazard.",
+        "Redirect mobility-impaired spectators to auxiliary ramp bypasses.",
+        "Report clearance status to Sector Command within 15 minutes."
+      ];
+    } else if (queryLower.includes('lost') || queryLower.includes('minor') || queryLower.includes('child')) {
+      priority = 'medium';
+      content = `${header}Deterministic Fan Support Protocol: Spectator Assistance required. Escort lost fans or unaccompanied minors to central resolution desks: North Plaza (Desk 1) or South Plaza (Desk 2). Verify ticket barcodes with backup handheld scanners.`;
+      actions = [
+        "Escort spectator safely to closest Plaza Info Desk.",
+        "Verify credentials and log incident in Guest Services database.",
+        "Coordinate supervisor lookup via Radio Channel 4.",
+        "Do not leave unaccompanied minors alone."
+      ];
+    } else {
+      priority = 'low';
+      content = `${header}Deterministic Operations Protocol: Standard advisory active. Ensure volunteers are staffed at active gates, perimeter checkpoints are clear, and backup handheld scanning devices are charged and ready.`;
+      actions = [
+        "Conduct sector radio communication check on Channel 1.",
+        "Inspect volunteer shift rosters for current match phase.",
+        "Ensure ticket queues maintain standard pacing configurations.",
+        "Report general status to Sector Supervisor."
+      ];
+    }
+
+    return {
+      content,
+      source: 'OFFLINE_INTELLIGENCE',
+      confidence: 'medium',
+      citations: [],
+      actions,
+      factorsConsidered: factors,
+      metadata: {
+        priority,
+        suggestedTasks: [
+          {
+            roleRequired: priority === 'critical' ? 'Security Captain' : 'Usher',
+            assignedCount: priority === 'critical' ? 4 : 1,
+            location: 'Incident Sector',
+            description: `Execute deterministic rules for ${priority} safety protocol.`
+          }
+        ],
+        requiredToolCalls: []
+      }
+    };
+  }
+
   private getGeneralFallback(): AIResponse {
     return {
       content: "[Offline Stadium Intelligence Active] System operational in standard fallback mode. Monitor crowd density, volunteer shifts, and incident queues via the operator dashboard.",

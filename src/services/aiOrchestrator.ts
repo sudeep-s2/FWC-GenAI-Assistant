@@ -160,10 +160,23 @@ CRITICAL: Do NOT wrap the JSON response in markdown code blocks like \`\`\`json 
 
     const prompt = `User Query: ${sanitized}`;
 
-    const geminiResult = await this.geminiService.generateStructuredResponse<Omit<AIResponse, 'source' | 'citations'>>(
+    let geminiResult = await this.geminiService.generateStructuredResponse<Omit<AIResponse, 'source' | 'citations'>>(
       prompt,
       systemInstruction
     );
+
+    // Layer 2: Provider Failover & Retry
+    if (!geminiResult.success) {
+      const backupKey = import.meta.env.VITE_BACKUP_GEMINI_API_KEY;
+      if (backupKey) {
+        console.warn('[Failover Engine] Primary API key failed. Swapping credentials and retrying request.');
+        this.geminiService.setApiKey(backupKey);
+        geminiResult = await this.geminiService.generateStructuredResponse<Omit<AIResponse, 'source' | 'citations'>>(
+          prompt,
+          systemInstruction
+        );
+      }
+    }
 
     // 7. Response Validation & Return
     if (geminiResult.success && geminiResult.data) {
@@ -220,8 +233,28 @@ CRITICAL: Do NOT wrap the JSON response in markdown code blocks like \`\`\`json 
     query?: string,
     documents?: import('../types').KnowledgeDocument[]
   ): AIResponse {
-    // If we have documents and a query, and it is NOT a simulation scenario, perform dynamic RAG-based offline synthesis
-    if (documents && documents.length > 0 && query && !query.includes('[FIFA 2026 Simulation]')) {
+    const isSimulationScenario = query && query.includes('[FIFA 2026 Simulation]');
+
+    // 1. Simulation Console Scenario Mock bypass
+    if (isSimulationScenario) {
+      let scenarioId = 'general';
+      if (intent === 'predictive') scenarioId = 'scen-predictive-risk';
+      else if (intent === 'surge') scenarioId = 'scen-surge-emergency';
+      else if (intent === 'lost-fan') scenarioId = 'scen-lost-fan';
+      else if (intent === 'accessibility') scenarioId = 'scen-accessibility-request';
+      else if (intent === 'maintenance') scenarioId = 'scen-maintenance-incident';
+      else if (intent === 'sustainability') scenarioId = 'scen-sustainability-optimization';
+
+      const fallbackResponse = this.fallbackAI.getScenarioFallback(scenarioId);
+      fallbackResponse.metadata = {
+        ...fallbackResponse.metadata,
+        triggerError: error.message
+      };
+      return fallbackResponse;
+    }
+
+    // 2. Layer 3: Dynamic RAG synthesis
+    if (documents && documents.length > 0 && query) {
       const fallbackResponse = this.fallbackAI.synthesizeResponseFromRAG(query, documents, matchPhase, activePersona);
       fallbackResponse.metadata = {
         ...fallbackResponse.metadata,
@@ -230,31 +263,12 @@ CRITICAL: Do NOT wrap the JSON response in markdown code blocks like \`\`\`json 
       return fallbackResponse;
     }
 
-    let scenarioId = 'general';
-    if (intent === 'predictive') scenarioId = 'scen-predictive-risk';
-    else if (intent === 'surge') scenarioId = 'scen-surge-emergency';
-    else if (intent === 'lost-fan') scenarioId = 'scen-lost-fan';
-    else if (intent === 'accessibility') scenarioId = 'scen-accessibility-request';
-    else if (intent === 'maintenance') scenarioId = 'scen-maintenance-incident';
-    else if (intent === 'sustainability') scenarioId = 'scen-sustainability-optimization';
-
-    const fallbackResponse = this.fallbackAI.getScenarioFallback(scenarioId);
+    // 3. Layer 4: Deterministic Emergency Rules Engine
+    const fallbackResponse = this.fallbackAI.getDeterministicEmergencyGuidance(query || intent, matchPhase, activePersona);
     fallbackResponse.metadata = {
       ...fallbackResponse.metadata,
       triggerError: error.message
     };
-    
-    // Add default explainability factors for fallback
-    if (!fallbackResponse.factorsConsidered) {
-      fallbackResponse.factorsConsidered = [
-        `✓ Match phase: ${matchPhase || 'PRE_MATCH'}`,
-        '✓ Crowd density',
-        '✓ Stadium SOP',
-        '✓ Transport status',
-        `✓ Active Persona: ${activePersona || 'Organizer'}`
-      ];
-    }
-    
     return fallbackResponse;
   }
 }

@@ -66,4 +66,18 @@ describe('FallbackAI RAG synthesis engine', () => {
     expect(result.content).toContain('Offline Stadium Intelligence Active');
     expect(result.citations).toHaveLength(0);
   });
+
+  it('should return deterministic emergency guidelines for medical queries', () => {
+    const result = fallback.getDeterministicEmergencyGuidance('medical assistance needed in Sector B', 'HALFTIME', 'Volunteer');
+    expect(result.content).toContain('Offline Emergency Rules Mode');
+    expect(result.content).toContain('Medical Standby active');
+    expect(result.metadata.priority).toBe('critical');
+    expect(result.actions).toContain('Notify Sector Command on Radio Channel 3.');
+  });
+
+  it('should return default deterministic guidelines for generic queries', () => {
+    const result = fallback.getDeterministicEmergencyGuidance('other random query', 'POST_MATCH', 'Fan');
+    expect(result.content).toContain('Standard advisory active');
+    expect(result.metadata.priority).toBe('low');
+  });
 });
